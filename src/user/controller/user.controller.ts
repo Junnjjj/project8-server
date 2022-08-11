@@ -8,12 +8,11 @@ export class UserController {
 
   @Post('signup')
   async signUp(@Body() body: UsersRequestDto) {
-    console.log(body);
-    return 'sigunUp';
+    return this.userService.signUp(body);
   }
 
   @Post('login')
-  logIn() {
+  logIn(@Body() body) {
     return 'login';
   }
 }

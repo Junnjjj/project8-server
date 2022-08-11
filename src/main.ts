@@ -9,6 +9,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalFilters(new HttpExceptionFilter());
 
-  await app.listen(3000);
+  const PORT = process.env.PORT;
+  await app.listen(PORT);
 }
 bootstrap();
