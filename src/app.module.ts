@@ -6,6 +6,8 @@ import { UserService } from './user/service/user.service';
 import { LoggerMiddleware } from './common/middlewares/logger.middleware';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
+import { UserModule } from './user/user.module';
+import { User } from './user/user.entity';
 
 @Module({
   imports: [
@@ -17,9 +19,10 @@ import { ConfigModule } from '@nestjs/config';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWD,
       database: process.env.DB_DATABASE,
-      entities: [],
-      synchronize: process.env.MODE === 'DEV' ? true : false,
+      entities: [User],
+      synchronize: false,
     }),
+    UserModule,
   ],
   controllers: [AppController, UserController],
   providers: [AppService, UserService],

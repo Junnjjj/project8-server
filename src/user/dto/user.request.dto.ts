@@ -2,10 +2,6 @@ import { IsEmail, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 export class UsersRequestDto {
   @IsNotEmpty()
-  @IsString()
-  name: string;
-
-  @IsNotEmpty()
   @IsEmail()
   loginId: string;
 
@@ -13,15 +9,19 @@ export class UsersRequestDto {
   @IsString()
   passwd: string;
 
+  @IsNotEmpty()
+  @IsString()
+  name: string;
+
   // Tel number
   @IsNotEmpty()
-  @IsNumber()
-  tel1: number;
+  @IsString()
+  tel1: string;
   @IsNotEmpty()
-  @IsNumber()
+  @IsString()
   tel2: string;
   @IsNotEmpty()
-  @IsNumber()
+  @IsString()
   tel3: string;
 
   // id: string;
