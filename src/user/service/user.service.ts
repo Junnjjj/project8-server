@@ -19,14 +19,14 @@ export class UserService {
 
     const hashedPassword = await bcrypt.hash(passwd, 12);
 
-    // const user = await this.userRepository.createUser({
-    //   loginId,
-    //   passwd: hashedPassword,
-    //   name,
-    //   tel1,
-    //   tel2,
-    //   tel3,
-    // });
-    // return user;
+    const user = await this.userRepository.createUser({
+      loginId,
+      passwd: hashedPassword,
+      name,
+      tel1,
+      tel2,
+      tel3,
+    });
+    return user;
   }
 }
