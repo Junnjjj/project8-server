@@ -31,4 +31,15 @@ export class UserRepository {
       throw new HttpException('db error', 400);
     }
   }
+
+  async findUserByEmail(email: string): Promise<User | null> {
+    try {
+      const user = await this.usersRepository.findOne({
+        where: { loginId: email },
+      });
+      return user;
+    } catch (error) {
+      throw new HttpException('db error', 400);
+    }
+  }
 }
