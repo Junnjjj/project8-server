@@ -35,7 +35,15 @@ export class UserRepository {
   async findUserByIdWithoutPassword(userId: number): Promise<User | null> {
     try {
       const user = await this.usersRepository.findOne({
-        select: { passwd: true },
+        select: {
+          loginId: true,
+          id: true,
+          name: true,
+          passwd: false,
+          tel1: true,
+          tel2: true,
+          tel3: true,
+        },
         where: { id: userId },
       });
       return user;
