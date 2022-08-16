@@ -31,4 +31,24 @@ export class UserRepository {
       throw new HttpException('db error', 400);
     }
   }
+
+  async findUserByIdWithoutPassword(userId: number): Promise<User | null> {
+    try {
+      const user = await this.usersRepository.findOne({
+        select: {
+          loginId: true,
+          id: true,
+          name: true,
+          passwd: false,
+          tel1: true,
+          tel2: true,
+          tel3: true,
+        },
+        where: { id: userId },
+      });
+      return user;
+    } catch (error) {
+      throw new HttpException('db error', 400);
+    }
+  }
 }
