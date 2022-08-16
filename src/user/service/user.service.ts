@@ -11,7 +11,7 @@ export class UserService {
 
   async signUp(body: UsersRequestDto) {
     const { loginId, passwd, name, tel1, tel2, tel3 } = body;
-    const isUserExist = await this.userRepository.existsByEmail(loginId);
+    const isUserExist = await this.userRepository.findUserByEmail(loginId);
 
     if (isUserExist) {
       throw new UnauthorizedException('해당하는 유저는 이미 존재합니다.');
