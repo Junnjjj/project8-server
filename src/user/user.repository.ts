@@ -42,4 +42,16 @@ export class UserRepository {
       throw new HttpException('db error', 400);
     }
   }
+
+  async findUserByIdWithoutPassword(userId: number): Promise<User | null> {
+    try {
+      const user = await this.usersRepository.findOne({
+        select: { passwd: true },
+        where: { id: userId },
+      });
+      return user;
+    } catch (error) {
+      throw new HttpException('db error', 400);
+    }
+  }
 }
