@@ -18,7 +18,7 @@ import { AuthModule } from './auth/auth.module';
       host: process.env.DB_HOST,
       port: 3306,
       username: process.env.DB_USERNAME,
-      // password: process.env.DB_PASSWD,
+      password: process.env.DB_PASSWD,
       database: process.env.DB_DATABASE,
       entities: [User],
       synchronize: false,
