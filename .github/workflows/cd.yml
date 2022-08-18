@@ -22,5 +22,5 @@ jobs:
             cd node/project8-server
             git pull origin develop
             git status
-            npm run build
+            nest build
             npm run start:prod
