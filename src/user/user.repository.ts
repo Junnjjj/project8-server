@@ -11,9 +11,9 @@ export class UserRepository {
     private usersRepository: Repository<User>,
   ) {}
 
-  async createUser(user) {
+  async createUser(User) {
     try {
-      const result = await this.usersRepository.save(user);
+      const result = await this.usersRepository.save(User);
 
       return result;
     } catch (error) {
