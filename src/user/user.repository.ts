@@ -11,13 +11,13 @@ export class UserRepository {
     private usersRepository: Repository<User>,
   ) {}
 
-  async createUser(User) {
+  async createUser(user) {
     try {
-      const result = await this.usersRepository.save(User);
+      const result = await this.usersRepository.save(user);
 
       return result;
     } catch (error) {
-      throw new HttpException(error, 400);
+      throw new HttpException('db error', 400);
     }
   }
 
@@ -28,7 +28,7 @@ export class UserRepository {
       });
       return user;
     } catch (error) {
-      throw new HttpException(error, 400);
+      throw new HttpException('db error', 400);
     }
   }
 
