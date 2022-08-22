@@ -48,7 +48,7 @@ export class UserRepository {
       });
       return user;
     } catch (error) {
-      throw new HttpException('db error', 400);
+      throw new HttpException(error, 400);
     }
   }
 }
