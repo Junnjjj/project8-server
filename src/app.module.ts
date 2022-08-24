@@ -9,7 +9,10 @@ import { ConfigModule } from '@nestjs/config';
 import { UserModule } from './user/user.module';
 import { User } from './user/user.entity';
 import { AuthModule } from './auth/auth.module';
-import { ProductsModule } from './products/products.module';
+import { ProductModule } from './product/product.module';
+import { ProductService } from './product/service/product.service';
+import { ProductController } from './product/controller/product.controller';
+import { Product } from './product/product.entity';
 
 @Module({
   imports: [
@@ -21,12 +24,12 @@ import { ProductsModule } from './products/products.module';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWD,
       database: process.env.DB_DATABASE,
-      entities: [User],
+      entities: [User, Product],
       synchronize: false,
     }),
     UserModule,
     AuthModule,
-    ProductsModule,
+    ProductModule,
   ],
   controllers: [AppController, UserController],
   providers: [AppService, UserService],

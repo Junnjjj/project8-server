@@ -1,17 +1,19 @@
 import { Controller, Get, Param, Post } from '@nestjs/common';
+import { ProductService } from '../service/product.service';
 
-@Controller('products')
-export class ProductsController {
-  //constructor() {}
+@Controller('product')
+export class ProductController {
+  constructor(private readonly productsService: ProductService) {}
 
   @Get()
   async showAllProducts() {
-    console.log('모든 제품 보기');
+    return this.productsService.showAllProducts();
   }
-
+  /*
   @Get(':id')
   showProduct(@Param('id') id: string): string {
     console.log('제품 하나 보기');
     return `This action returns a #${id} cat`;
   }
+ */
 }
