@@ -15,7 +15,7 @@ export class Product {
   description: string;
 
   @Column()
-  startPrice: number;
+  startprice: number;
 
   @Column()
   endtime: string;

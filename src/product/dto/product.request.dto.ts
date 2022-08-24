@@ -3,7 +3,7 @@ import { IsEmail, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 export class ProductRequestDto {
   @IsNotEmpty()
   @IsString()
-  etype: string;
+  etype: number;
 
   @IsNotEmpty()
   @IsString()
@@ -23,7 +23,7 @@ export class ProductRequestDto {
 
   @IsNotEmpty()
   @IsString()
-  owner: string;
+  owner: number;
 
   //id: string
   //createDate: string
