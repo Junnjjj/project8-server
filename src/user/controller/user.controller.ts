@@ -5,8 +5,9 @@ import {
   Get,
   UseGuards,
   Req,
-  Request,
+  Res,
 } from '@nestjs/common';
+import { Request, Response } from 'express';
 import { UserService } from '../service/user.service';
 import { UsersRequestDto } from '../dto/user.request.dto';
 import { AuthService } from '../../auth/auth.service';
@@ -27,14 +28,37 @@ export class UserController {
   }
 
   @Post('login')
-  logIn(@Body() body: LoginRequestDto) {
-    return this.authService.jwtLogIn(body);
+  async logIn(@Body() body: LoginRequestDto, @Res() res: Response) {
+    //jwt 토큰 생성
+    const token = await this.authService.jwtLogIn(body);
+
+    //쿠키에 jwt 정보 저장
+    this.authService.setJwtCookie(token, res);
+
+    return res.send({
+      message: 'login successful',
+    });
   }
 
   @UseGuards(JwtAuthGuard)
   @Get()
-  getCurrentUser(@CurrentUser() user) {
-    console.log(user);
+  getCurrentUser(@CurrentUser() user, @Req() req: Request) {
     return user;
+  }
+
+  @Get('/cookies')
+  getCookies(@Req() req: Request, @Res() res: Response): any {
+    const jwt = req.cookies['jwt'];
+    return res.send(jwt);
+  }
+
+  @Post('/logout')
+  logout(@Req() req: Request, @Res() res: Response): any {
+    //쿠키 삭제
+    this.authService.deleteJwtCookie(res);
+
+    return res.send({
+      message: 'logout successful',
+    });
   }
 }
