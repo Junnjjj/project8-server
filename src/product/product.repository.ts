@@ -33,12 +33,10 @@ export class ProductRepository {
 
   async createPost(product) {
     try {
-      console.log('어디까지');
       const result = await this.productRepository.save(product);
-      console.log('되니');
       return result;
     } catch (error) {
-      throw new HttpException(error, 400);
+      throw new HttpException('db error', 400);
     }
   }
 }

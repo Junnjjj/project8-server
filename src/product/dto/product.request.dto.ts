@@ -2,7 +2,7 @@ import { IsEmail, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 export class ProductRequestDto {
   @IsNotEmpty()
-  @IsString()
+  @IsNumber()
   etype: number;
 
   @IsNotEmpty()
@@ -22,7 +22,7 @@ export class ProductRequestDto {
   endtime: string;
 
   @IsNotEmpty()
-  @IsString()
+  @IsNumber()
   owner: number;
 
   //id: string

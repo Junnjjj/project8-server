@@ -38,4 +38,18 @@ export class AuthService {
       token: this.jwtService.sign(payload),
     };
   }
+
+  setJwtCookie(token, res) {
+    res.setHeader('Authorization', 'Bearer ' + token.token);
+    res.cookie('jwt', token.token, {
+      httpOnly: true,
+      maxAge: 24 * 60 * 60 * 1000, //1 day
+    });
+  }
+
+  deleteJwtCookie(res) {
+    res.cookie('jwt', '', {
+      maxAge: 0,
+    });
+  }
 }

@@ -15,13 +15,13 @@ export class Product {
   description: string;
 
   @Column()
-  startprice: number;
+  startprice: string;
 
   @Column()
   endtime: string;
 
   @Column()
-  owner: string;
+  owner: number;
 
   // @Column()
   // id: string
