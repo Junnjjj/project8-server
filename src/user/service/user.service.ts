@@ -29,4 +29,8 @@ export class UserService {
     });
     return user;
   }
+
+  async setCurrentRefreshToken(email: string, token: string) {
+    await this.userRepository.setRefreshToken(email, token);
+  }
 }

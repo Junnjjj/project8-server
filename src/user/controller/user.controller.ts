@@ -33,6 +33,10 @@ export class UserController {
     const { AccessToken, RefreshToken } = await this.authService.jwtLogIn(body);
 
     // Set-Cookie 에 Refresh Token 저장, Cookie or Data에 Access Token 저장
+    await this.userService.setCurrentRefreshToken(
+      body.loginId,
+      RefreshToken.refreshToken,
+    );
     res.cookie('refreshToken', RefreshToken);
 
     return res.send({

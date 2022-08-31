@@ -68,7 +68,7 @@ export class AuthService {
     });
 
     return {
-      accessToken: token,
+      refreshToken: token,
       domain: 'localhost',
       path: '/',
       httpOnly: true,
