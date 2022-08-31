@@ -29,14 +29,14 @@ export class UserController {
 
   @Post('login')
   async logIn(@Body() body: LoginRequestDto, @Res() res: Response) {
-    //jwt 토큰 생성
-    const token = await this.authService.jwtLogIn(body);
+    // email, password 일치하는지 확인 후 - jwt 토큰 생성
+    const { AccessToken, RefreshToken } = await this.authService.jwtLogIn(body);
 
-    //쿠키에 jwt 정보 저장
-    this.authService.setJwtCookie(token, res);
+    // Set-Cookie 에 Refresh Token 저장, Cookie or Data에 Access Token 저장
+    res.cookie('refreshToken', RefreshToken);
 
     return res.send({
-      message: 'login successful',
+      accessToken: AccessToken,
     });
   }
 
