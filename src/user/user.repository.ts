@@ -52,10 +52,10 @@ export class UserRepository {
     }
   }
 
-  async setRefreshToken(email: string, token: string) {
+  async setRefreshToken(loginId: string, token: string) {
     try {
       const user = await this.usersRepository.findOne({
-        where: { loginId: email },
+        where: { loginId: loginId },
       });
       await this.usersRepository.save({
         ...user,

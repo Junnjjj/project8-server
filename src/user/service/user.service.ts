@@ -30,7 +30,7 @@ export class UserService {
     return user;
   }
 
-  async setCurrentRefreshToken(email: string, token: string) {
-    await this.userRepository.setRefreshToken(email, token);
+  async setCurrentRefreshToken(loginId: string, token: string) {
+    await this.userRepository.setRefreshToken(loginId, token);
   }
 }

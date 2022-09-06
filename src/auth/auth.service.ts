@@ -35,12 +35,6 @@ export class AuthService {
     const AccessToken = this.getCookieWithJwtAccessToken(loginId, user.id);
     const RefreshToken = this.getCookieWithJwtRefreshToken(user.id);
 
-    // 3. User DB 에 저장
-
-    // Set-Cookie 에 Refresh Token 저장, Cookie or Data에 Access Token 저장
-
-    // const payload = { email: loginId, sub: user.id };
-
     return {
       // token: this.jwtService.sign(payload),
       AccessToken,
@@ -68,11 +62,13 @@ export class AuthService {
     });
 
     return {
-      refreshToken: token,
-      domain: 'localhost',
-      path: '/',
-      httpOnly: true,
-      maxAge: Number(process.env.JWT_REFRESH_TOKEN_EXPIRATION_TIME) * 1000,
+      token: token,
+      options: {
+        domain: 'localhost',
+        path: '/',
+        httpOnly: true,
+        maxAge: Number(process.env.JWT_REFRESH_TOKEN_EXPIRATION_TIME) * 1000,
+      },
     };
   }
 
@@ -84,8 +80,12 @@ export class AuthService {
   }
 
   deleteJwtCookie(res) {
-    res.cookie('jwt', '', {
+    res.cookie('refreshToken', '', {
       maxAge: 0,
+    });
+
+    return res.send({
+      message: 'logout successful',
     });
   }
 }

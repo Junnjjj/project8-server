@@ -22,6 +22,12 @@ export class UserController {
     private readonly authService: AuthService,
   ) {}
 
+  @UseGuards(JwtAuthGuard)
+  @Get()
+  getCurrentUser(@CurrentUser() user, @Req() req: Request) {
+    return user;
+  }
+
   @Post('signup')
   async signUp(@Body() body: UsersRequestDto) {
     return this.userService.signUp(body);
@@ -32,37 +38,34 @@ export class UserController {
     // email, password 일치하는지 확인 후 - jwt 토큰 생성
     const { AccessToken, RefreshToken } = await this.authService.jwtLogIn(body);
 
-    // Set-Cookie 에 Refresh Token 저장, Cookie or Data에 Access Token 저장
+    // User DB 에 Refresh Token 저장
     await this.userService.setCurrentRefreshToken(
       body.loginId,
-      RefreshToken.refreshToken,
+      RefreshToken.token,
     );
-    res.cookie('refreshToken', RefreshToken);
 
+    // Set-Cookie 에 Refresh Token 저장
+    res.cookie('refreshToken', RefreshToken.token, RefreshToken.options);
+
+    // Access Token response data 에 반환
     return res.send({
       accessToken: AccessToken,
     });
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get()
-  getCurrentUser(@CurrentUser() user, @Req() req: Request) {
-    return user;
-  }
-
-  @Get('/cookies')
-  getCookies(@Req() req: Request, @Res() res: Response): any {
-    const jwt = req.cookies['jwt'];
-    return res.send(jwt);
-  }
-
   @Post('/logout')
   logout(@Req() req: Request, @Res() res: Response): any {
-    //쿠키 삭제
-    this.authService.deleteJwtCookie(res);
+    //Client 쿠키 삭제
+    return this.authService.deleteJwtCookie(res);
+  }
 
-    return res.send({
-      message: 'logout successful',
-    });
+  // accessToken refresh
+  // @UseGuards(JwtAuthGuard)
+  @Get('/refresh')
+  getCookies(@Req() req: Request, @Res() res: Response): any {
+    const jwt = req.cookies['refreshToken'];
+    console.log(jwt);
+    return res.send(jwt);
   }
 }
