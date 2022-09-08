@@ -22,6 +22,12 @@ export class UserController {
     private readonly authService: AuthService,
   ) {}
 
+  @UseGuards(JwtAuthGuard)
+  @Get()
+  getCurrentUser(@CurrentUser() user, @Req() req: Request) {
+    return user;
+  }
+
   @Post('signup')
   async signUp(@Body() body: UsersRequestDto) {
     return this.userService.signUp(body);
@@ -29,36 +35,49 @@ export class UserController {
 
   @Post('login')
   async logIn(@Body() body: LoginRequestDto, @Res() res: Response) {
-    //jwt 토큰 생성
-    const token = await this.authService.jwtLogIn(body);
+    // email, password 일치하는지 확인 후 - jwt 토큰 생성
+    const { AccessToken, RefreshToken } = await this.authService.jwtLogIn(body);
 
-    //쿠키에 jwt 정보 저장
-    this.authService.setJwtCookie(token, res);
+    // User DB 에 Refresh Token 저장
+    await this.userService.setCurrentRefreshToken(
+      body.loginId,
+      RefreshToken.token,
+    );
 
+    // Set-Cookie 에 Refresh Token 저장
+    // res.cookie('refreshToken', RefreshToken.token, RefreshToken.options);
+    res.cookie('refreshToken', RefreshToken.token, RefreshToken.options);
+
+    // Access Token response data 에 반환
     return res.send({
-      message: 'login successful',
+      accessToken: AccessToken,
     });
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get()
-  getCurrentUser(@CurrentUser() user, @Req() req: Request) {
-    return user;
-  }
-
-  @Get('/cookies')
-  getCookies(@Req() req: Request, @Res() res: Response): any {
-    const jwt = req.cookies['jwt'];
-    return res.send(jwt);
-  }
-
   @Post('/logout')
-  logout(@Req() req: Request, @Res() res: Response): any {
-    //쿠키 삭제
+  async logout(@Req() req: Request, @Res() res: Response, @CurrentUser() user) {
+    // DB에 Refresh Token 삭제
+    await this.userService.deleteRefreshToken(user.loginId);
+
+    //Client 쿠키 삭제
     this.authService.deleteJwtCookie(res);
 
     return res.send({
       message: 'logout successful',
     });
+  }
+
+  // accessToken refresh
+  // @UseGuards(JwtAuthGuard)
+  @Get('/refresh')
+  getCookies(
+    @Req() req: Request,
+    @Res() res: Response,
+    @CurrentUser() user,
+  ): any {
+    const jwt = req.cookies['refreshToken'];
+    console.log(jwt);
+    return res.send(jwt);
   }
 }

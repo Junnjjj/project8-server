@@ -48,6 +48,34 @@ export class UserRepository {
       });
       return user;
     } catch (error) {
+      throw new HttpException('db error', 400);
+    }
+  }
+
+  async setRefreshToken(loginId: string, token: string) {
+    try {
+      const user = await this.usersRepository.findOne({
+        where: { loginId: loginId },
+      });
+      await this.usersRepository.save({
+        ...user,
+        currentHashedRefreshToken: token,
+      });
+    } catch (error) {
+      throw new HttpException(error, 400);
+    }
+  }
+
+  async deleteToken(loginId: string) {
+    try {
+      const user = await this.usersRepository.findOne({
+        where: { loginId },
+      });
+      await this.usersRepository.save({
+        ...user,
+        currentHashedRefreshToken: '',
+      });
+    } catch (error) {
       throw new HttpException(error, 400);
     }
   }
