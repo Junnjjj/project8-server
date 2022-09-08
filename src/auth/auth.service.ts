@@ -81,11 +81,10 @@ export class AuthService {
 
   deleteJwtCookie(res) {
     res.cookie('refreshToken', '', {
+      domain: 'localhost',
+      path: '/',
+      httpOnly: true,
       maxAge: 0,
-    });
-
-    return res.send({
-      message: 'logout successful',
     });
   }
 }

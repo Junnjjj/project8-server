@@ -65,4 +65,18 @@ export class UserRepository {
       throw new HttpException(error, 400);
     }
   }
+
+  async deleteToken(loginId: string) {
+    try {
+      const user = await this.usersRepository.findOne({
+        where: { loginId },
+      });
+      await this.usersRepository.save({
+        ...user,
+        currentHashedRefreshToken: '',
+      });
+    } catch (error) {
+      throw new HttpException(error, 400);
+    }
+  }
 }

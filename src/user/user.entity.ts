@@ -15,9 +15,6 @@ export class User {
   @Column()
   name: string;
 
-  // @Column()
-  // createdate: string;
-
   @Column()
   tel1: number;
 
@@ -30,13 +27,4 @@ export class User {
   @Column({ nullable: true })
   @Exclude()
   currentHashedRefreshToken?: string;
-
-  // @Column()
-  // outdate: string;
-  //
-  // @Column()
-  // ssn: string;
-  //
-  // @Column()
-  // remark: string;
 }

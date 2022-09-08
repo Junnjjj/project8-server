@@ -33,4 +33,8 @@ export class UserService {
   async setCurrentRefreshToken(loginId: string, token: string) {
     await this.userRepository.setRefreshToken(loginId, token);
   }
+
+  async deleteRefreshToken(loginId: string) {
+    await this.userRepository.deleteToken(loginId);
+  }
 }

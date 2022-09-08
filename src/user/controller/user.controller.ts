@@ -45,6 +45,7 @@ export class UserController {
     );
 
     // Set-Cookie 에 Refresh Token 저장
+    // res.cookie('refreshToken', RefreshToken.token, RefreshToken.options);
     res.cookie('refreshToken', RefreshToken.token, RefreshToken.options);
 
     // Access Token response data 에 반환
@@ -55,15 +56,26 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard)
   @Post('/logout')
-  logout(@Req() req: Request, @Res() res: Response): any {
+  async logout(@Req() req: Request, @Res() res: Response, @CurrentUser() user) {
+    // DB에 Refresh Token 삭제
+    await this.userService.deleteRefreshToken(user.loginId);
+
     //Client 쿠키 삭제
-    return this.authService.deleteJwtCookie(res);
+    this.authService.deleteJwtCookie(res);
+
+    return res.send({
+      message: 'logout successful',
+    });
   }
 
   // accessToken refresh
   // @UseGuards(JwtAuthGuard)
   @Get('/refresh')
-  getCookies(@Req() req: Request, @Res() res: Response): any {
+  getCookies(
+    @Req() req: Request,
+    @Res() res: Response,
+    @CurrentUser() user,
+  ): any {
     const jwt = req.cookies['refreshToken'];
     console.log(jwt);
     return res.send(jwt);
