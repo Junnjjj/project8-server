@@ -1,4 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Exclude } from 'class-transformer';
 
 @Entity()
 export class User {
@@ -14,9 +15,6 @@ export class User {
   @Column()
   name: string;
 
-  // @Column()
-  // createdate: string;
-
   @Column()
   tel1: number;
 
@@ -26,12 +24,7 @@ export class User {
   @Column()
   tel3: number;
 
-  // @Column()
-  // outdate: string;
-  //
-  // @Column()
-  // ssn: string;
-  //
-  // @Column()
-  // remark: string;
+  @Column({ nullable: true })
+  @Exclude()
+  currentHashedRefreshToken?: string;
 }

@@ -11,6 +11,10 @@ async function bootstrap() {
   app.useGlobalFilters(new HttpExceptionFilter());
   //쿠키를 읽기 위한 쿠키파서
   app.use(cookieParser());
+  app.enableCors({
+    origin: process.env.MODE === 'DEV' ? true : process.env.ORIGIN,
+    credentials: true,
+  });
 
   const PORT = process.env.PORT;
   await app.listen(PORT);

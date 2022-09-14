@@ -13,7 +13,6 @@ export class ProductRepository {
   async findAllProducts(): Promise<Product[] | null> {
     try {
       const productList = await this.productRepository.find({});
-      console.log(productList);
       return productList;
     } catch (error) {
       throw new HttpException('db error', 400);
