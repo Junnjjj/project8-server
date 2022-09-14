@@ -18,11 +18,11 @@ export class ProductService {
   }
 
   async createPost(body: ProductRequestDto, user: User) {
+    //현재 로그인한 사람의 id를 프로덕트의 owner로 설정g
     const owner = user.id;
 
     const { etype, name, description, startprice, endtime } = body;
 
-    // 수정 필요 - 쿠키에서 로그인정보 가져와서 owner 가져오기
     const newProduct = await this.productRepository.createPost({
       etype,
       name,
