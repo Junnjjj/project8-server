@@ -1,4 +1,11 @@
-import { IsEmail, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import {
+  IsArray,
+  IsEmail,
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+} from 'class-validator';
+import { Type } from 'class-transformer';
 
 export class ProductRequestDto {
   @IsNotEmpty()
@@ -21,9 +28,8 @@ export class ProductRequestDto {
   @IsString()
   endtime: string;
 
-  @IsNotEmpty()
-  @IsNumber()
-  owner: number;
+  @IsArray()
+  uploadImgFromServer: string[];
 
   //id: string
   //createDate: string

@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { ProductFile } from './productFile.entity';
 
 @Entity()
 export class Product {
@@ -23,12 +24,6 @@ export class Product {
   @Column()
   owner: number;
 
-  // @Column()
-  // id: string
-  //
-  // @Column()
-  // createDate: string
-  //
-  // @Column()
-  // buyer: string
+  @OneToMany(() => ProductFile, (productFile) => productFile.product)
+  productFiles: ProductFile[];
 }

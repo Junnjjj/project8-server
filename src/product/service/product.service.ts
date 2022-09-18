@@ -1,11 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { ProductRepository } from '../product.repository';
 import { ProductRequestDto } from '../dto/product.request.dto';
-import { User } from '../../user/user.entity';
+import { User } from '../../entity/user.entity';
+import { ProductFileRepository } from '../productFile.repository';
 
 @Injectable()
 export class ProductService {
-  constructor(private readonly productRepository: ProductRepository) {}
+  constructor(
+    private readonly productRepository: ProductRepository,
+    private readonly productFileRepository: ProductFileRepository,
+  ) {}
 
   async showAllProducts() {
     const productList = await this.productRepository.findAllProducts();
@@ -20,9 +24,19 @@ export class ProductService {
   async createPost(body: ProductRequestDto, user: User) {
     const owner = user.id;
 
-    const { etype, name, description, startprice, endtime } = body;
+    const {
+      etype,
+      name,
+      description,
+      startprice,
+      endtime,
+      uploadImgFromServer,
+    } = body;
 
-    // 수정 필요 - 쿠키에서 로그인정보 가져와서 owner 가져오기
+    // uploadImgFromServer : string[] => 외래키 참조
+
+    // Image 정보를 바탕으로 main image URI,
+    // Product IMG 외래키 설정 ( 트랜잭션 설정 )
     const newProduct = await this.productRepository.createPost({
       etype,
       name,
@@ -32,5 +46,11 @@ export class ProductService {
       owner,
     });
     return newProduct;
+  }
+
+  async saveProductImg(file) {
+    console.log('files', file);
+    //  save img url to Database
+    return await this.productFileRepository.saveProductImg(file);
   }
 }
