@@ -30,12 +30,12 @@ export class ProductService {
       description,
       startprice,
       endtime,
+      imagesName,
       uploadImgFromServer,
     } = body;
 
-    // uploadImgFromServer : string[] => 외래키 참조
+    console.log(imagesName, uploadImgFromServer);
 
-    // Image 정보를 바탕으로 main image URI,
     // Product IMG 외래키 설정 ( 트랜잭션 설정 )
     const newProduct = await this.productRepository.createPost({
       etype,
@@ -45,12 +45,26 @@ export class ProductService {
       endtime,
       owner,
     });
-    return newProduct;
+
+    // uploadImgFromServer : string[] => 외래키 참조
+    const result = await this.productFileRepository.setFKActive({
+      uploadImgFromServer,
+      imagesName,
+      newProduct,
+    });
+
+    console.log('url', result);
+
+    const urlQueryResult = await this.productRepository.updateMainURL(
+      result,
+      newProduct.id,
+    );
+
+    return urlQueryResult;
   }
 
-  async saveProductImg(file) {
-    console.log('files', file);
+  async saveProductImg(file, productName) {
     //  save img url to Database
-    return await this.productFileRepository.saveProductImg(file);
+    return await this.productFileRepository.saveProductImg(file, productName);
   }
 }

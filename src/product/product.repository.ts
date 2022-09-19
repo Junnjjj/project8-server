@@ -35,7 +35,21 @@ export class ProductRepository {
       const result = await this.productRepository.save(product);
       return result;
     } catch (error) {
-      throw new HttpException('db error', 400);
+      throw new HttpException(error, 400);
+    }
+  }
+
+  async updateMainURL(imgURLData, productId) {
+    try {
+      const result = await this.productRepository
+        .createQueryBuilder('product')
+        .update()
+        .set({ mainUrl: imgURLData.imgURL })
+        .where({ id: productId })
+        .execute();
+      return result;
+    } catch (error) {
+      throw new HttpException(error, 400);
     }
   }
 }

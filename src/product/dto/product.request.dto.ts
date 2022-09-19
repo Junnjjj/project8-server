@@ -29,6 +29,9 @@ export class ProductRequestDto {
   endtime: string;
 
   @IsArray()
+  imagesName: string[];
+
+  @IsArray()
   uploadImgFromServer: string[];
 
   //id: string

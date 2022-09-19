@@ -41,15 +41,14 @@ export class ProductController {
   }
 
   // todo : multerOption 아이디 추가하여 upload/{id}/file.name 저장될 수 있게
-  @Post('upload')
+  @Post('upload/:productName')
   @UseGuards(JwtAuthGuard)
-  @UseInterceptors(FilesInterceptor('image', 5, multerOptions('products')))
+  @UseInterceptors(FilesInterceptor('image', 5, multerOptions(`products`)))
   uploadImg(
+    @Param('productName') productName: string,
     @UploadedFiles() files: Array<Express.Multer.File>,
     @CurrentUser() user: User,
   ) {
-    console.log(files);
-    // db 저장하는 로직
-    return this.productsService.saveProductImg(files[0]);
+    return this.productsService.saveProductImg(files[0], productName);
   }
 }

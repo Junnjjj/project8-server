@@ -31,12 +31,12 @@ const storage = (folder: string): multer.StorageEngine => {
 
     filename(req, file, cb) {
       //* 어떤 이름으로 올릴 지
-      const ext = path.extname(file.originalname);
+      const ext = path.extname(file.fieldname);
       const fileName = `${path.basename(
-        file.originalname,
+        file.fieldname,
         ext,
       )}${Date.now()}${ext}`;
-      cb(null, fileName);
+      cb(null, fileName + Math.round(Math.random() * 1e9) + '.jpg');
     },
   });
 };

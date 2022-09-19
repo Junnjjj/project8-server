@@ -21,9 +21,14 @@ export class Product {
   @Column()
   endtime: string;
 
+  @Column({ nullable: true })
+  mainUrl: string;
+
   @Column()
   owner: number;
 
-  @OneToMany(() => ProductFile, (productFile) => productFile.product)
+  @OneToMany(() => ProductFile, (productFile) => productFile.product, {
+    cascade: true,
+  })
   productFiles: ProductFile[];
 }
