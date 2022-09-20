@@ -23,6 +23,9 @@ export class ProductRepository {
     try {
       const product = await this.productRepository.findOne({
         where: { id: productId },
+        relations: {
+          productFiles: true,
+        },
       });
       return product;
     } catch (error) {

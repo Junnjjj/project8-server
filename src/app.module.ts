@@ -24,7 +24,7 @@ import { ProductFile } from './entity/productFile.entity';
       password: process.env.DB_PASSWD,
       database: process.env.DB_DATABASE,
       entities: [User, Product, ProductFile],
-      synchronize: true,
+      synchronize: false,
     }),
     UserModule,
     AuthModule,
