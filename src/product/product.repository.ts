@@ -19,6 +19,20 @@ export class ProductRepository {
     }
   }
 
+  async findProductsByPage(pageNum: number): Promise<Product[] | null> {
+    const limit = 8; //페이지 당 표시할 프로덕트 수
+    const skip = (pageNum - 1) * limit; //스킵할 프로덕트 수
+    try {
+      const productList = await this.productRepository.find({
+        skip: skip,
+        take: limit,
+      });
+      return productList;
+    } catch (error) {
+      throw new HttpException('db error', 400);
+    }
+  }
+
   async findProductById(productId: number): Promise<Product | null> {
     try {
       const product = await this.productRepository.findOne({
