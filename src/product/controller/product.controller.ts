@@ -29,6 +29,11 @@ export class ProductController {
     return this.productsService.showAllProducts();
   }
 
+  @Get('page:id')
+  async showProductsByPage(@Param('id') id: number): Promise<Product[]> {
+    return this.productsService.showProductsByPage(id);
+  }
+
   @Get(':id')
   showProduct(@Param('id') id: number): Promise<Product> {
     return this.productsService.showOneProduct(id);

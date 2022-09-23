@@ -16,6 +16,13 @@ export class ProductService {
     return productList;
   }
 
+  async showProductsByPage(pageNum: number) {
+    const productList = await this.productRepository.findProductsByPage(
+      pageNum,
+    );
+    return productList;
+  }
+
   async showOneProduct(productId) {
     const product = await this.productRepository.findProductById(productId);
     return product;
@@ -34,9 +41,6 @@ export class ProductService {
       uploadImgFromServer,
     } = body;
 
-    console.log(imagesName, uploadImgFromServer);
-
-    // Product IMG 외래키 설정 ( 트랜잭션 설정 )
     const newProduct = await this.productRepository.createPost({
       etype,
       name,
