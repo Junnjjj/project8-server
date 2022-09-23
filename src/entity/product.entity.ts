@@ -1,5 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { ProductFile } from './productFile.entity';
+import { BiddingLog } from './biddingLog.entity';
 
 @Entity()
 export class Product {
@@ -19,6 +20,9 @@ export class Product {
   startprice: string;
 
   @Column()
+  nowPrice: string;
+
+  @Column()
   endtime: string;
 
   @Column({ nullable: true })
@@ -31,4 +35,9 @@ export class Product {
     cascade: true,
   })
   productFiles: ProductFile[];
+
+  @OneToMany(() => BiddingLog, (biddingLog) => biddingLog.product, {
+    cascade: true,
+  })
+  biddingLogs: BiddingLog[];
 }
