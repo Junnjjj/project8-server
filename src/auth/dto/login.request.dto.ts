@@ -1,4 +1,4 @@
-import { User } from '../../user/user.entity';
+import { User } from '../../entity/user.entity';
 import { PickType } from '@nestjs/swagger';
 
 export class LoginRequestDto extends PickType(User, [

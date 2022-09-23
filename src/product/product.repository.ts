@@ -1,6 +1,6 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Product } from './product.entity';
+import { Product } from '../entity/product.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -23,6 +23,9 @@ export class ProductRepository {
     try {
       const product = await this.productRepository.findOne({
         where: { id: productId },
+        relations: {
+          productFiles: true,
+        },
       });
       return product;
     } catch (error) {
@@ -35,7 +38,21 @@ export class ProductRepository {
       const result = await this.productRepository.save(product);
       return result;
     } catch (error) {
-      throw new HttpException('db error', 400);
+      throw new HttpException(error, 400);
+    }
+  }
+
+  async updateMainURL(imgURLData, productId) {
+    try {
+      const result = await this.productRepository
+        .createQueryBuilder('product')
+        .update()
+        .set({ mainUrl: imgURLData.imgURL })
+        .where({ id: productId })
+        .execute();
+      return result;
+    } catch (error) {
+      throw new HttpException(error, 400);
     }
   }
 }

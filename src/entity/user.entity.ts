@@ -1,5 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToMany } from 'typeorm';
 import { Exclude } from 'class-transformer';
+import { BiddingLog } from './biddingLog.entity';
 
 @Entity()
 export class User {
@@ -27,4 +28,7 @@ export class User {
   @Column({ nullable: true })
   @Exclude()
   currentHashedRefreshToken?: string;
+
+  @ManyToMany(() => BiddingLog, (biddingLog) => biddingLog.user)
+  biddingLogs: BiddingLog[];
 }
