@@ -41,11 +41,14 @@ export class ProductService {
       uploadImgFromServer,
     } = body;
 
+    const nowPrice = startprice;
+
     const newProduct = await this.productRepository.createPost({
       etype,
       name,
       description,
       startprice,
+      nowPrice,
       endtime,
       owner,
     });

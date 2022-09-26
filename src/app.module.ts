@@ -12,6 +12,7 @@ import { AuthModule } from './auth/auth.module';
 import { ProductModule } from './product/product.module';
 import { Product } from './entity/product.entity';
 import { ProductFile } from './entity/productFile.entity';
+import { BiddingLog } from './entity/biddingLog.entity';
 
 @Module({
   imports: [
@@ -23,7 +24,7 @@ import { ProductFile } from './entity/productFile.entity';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWD,
       database: process.env.DB_DATABASE,
-      entities: [User, Product, ProductFile],
+      entities: [User, Product, ProductFile, BiddingLog],
       synchronize: false,
     }),
     UserModule,
