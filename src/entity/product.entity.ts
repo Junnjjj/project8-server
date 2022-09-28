@@ -19,7 +19,7 @@ export class Product {
   createdDate: Date;
 
   @Column()
-  etype: number;
+  eType: number;
 
   @Column()
   name: string;
@@ -28,7 +28,13 @@ export class Product {
   description: string;
 
   @Column()
-  startprice: string;
+  startPrice: string;
+
+  @Column()
+  bidUnit: string;
+
+  @Column({ default: true })
+  active: boolean;
 
   @Column()
   nowPrice: string;
@@ -37,9 +43,6 @@ export class Product {
     type: 'timestamp',
   })
   endtime: Date;
-
-  @Column()
-  active: boolean;
 
   @Column({ nullable: true })
   mainUrl: string;

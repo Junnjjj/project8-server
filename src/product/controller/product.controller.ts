@@ -9,11 +9,11 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { ProductService } from '../service/product.service';
+import { User } from '../../entity/user.entity';
 import { Product } from '../../entity/product.entity';
 import { ProductRequestDto } from '../dto/product.request.dto';
 import { JwtAuthGuard } from '../../auth/jwt/jwt.guard';
 import { CurrentUser } from '../../common/decorators/user.decorator';
-import { User } from '../../entity/user.entity';
 import {
   FileFieldsInterceptor,
   FilesInterceptor,

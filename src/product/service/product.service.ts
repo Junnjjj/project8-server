@@ -34,26 +34,24 @@ export class ProductService {
     const owner = user.id;
 
     const {
-      etype,
+      eType,
       name,
       description,
-      startprice,
-      endtime,
+      startPrice,
+      endTime,
+      bidUnit,
       imagesName,
       uploadImgFromServer,
     } = body;
 
-    const nowPrice = startprice;
-    const active = true;
-
     const newProduct = await this.productRepository.createPost({
-      etype,
+      eType,
       name,
       description,
-      startprice,
-      nowPrice,
-      endtime,
-      active,
+      startPrice,
+      nowPrice: startPrice,
+      endTime,
+      bidUnit,
       owner,
     });
 
@@ -73,7 +71,7 @@ export class ProductService {
 
     await this.cronService.addBiddingEndCronJob(
       newProduct.id,
-      new Date(endtime),
+      new Date(endTime),
     );
 
     return urlQueryResult;

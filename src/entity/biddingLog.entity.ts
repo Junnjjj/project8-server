@@ -4,6 +4,7 @@ import {
   PrimaryGeneratedColumn,
   ManyToOne,
   ManyToMany,
+  CreateDateColumn,
 } from 'typeorm';
 import { Product } from './product.entity';
 import { User } from './user.entity';
@@ -19,11 +20,18 @@ export class BiddingLog {
   @Column({ default: true })
   biddingSuccess: boolean;
 
+  @CreateDateColumn()
+  createdDate: Date;
+
+  @Column({ default: true })
+  message: boolean;
+
+  @Column({ type: 'tinyint', default: 0 })
+  shipping: number;
+
   @ManyToOne(() => Product, (product) => product.biddingLogs)
   product: Product;
 
   @ManyToMany(() => User, (user) => user.biddingLogs)
   user: User[];
 }
-
-// ID, 물건ID, 가격, 사용자ID
