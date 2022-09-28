@@ -8,7 +8,7 @@ export class Product {
   id: number;
 
   @Column()
-  etype: number;
+  eType: number;
 
   @Column()
   name: string;
@@ -17,13 +17,19 @@ export class Product {
   description: string;
 
   @Column()
-  startprice: string;
+  startPrice: string;
+
+  @Column()
+  bidUnit: string;
+
+  @Column({ default: true })
+  active: boolean;
 
   @Column()
   nowPrice: string;
 
   @Column()
-  endtime: string;
+  endTime: string;
 
   @Column({ nullable: true })
   mainUrl: string;

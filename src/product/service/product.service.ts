@@ -32,21 +32,24 @@ export class ProductService {
     const owner = user.id;
 
     const {
-      etype,
+      eType,
       name,
       description,
-      startprice,
-      endtime,
+      startPrice,
+      endTime,
+      bidUnit,
       imagesName,
       uploadImgFromServer,
     } = body;
 
     const newProduct = await this.productRepository.createPost({
-      etype,
+      eType,
       name,
       description,
-      startprice,
-      endtime,
+      startPrice,
+      nowPrice: startPrice,
+      endTime,
+      bidUnit,
       owner,
     });
 

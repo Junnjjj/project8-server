@@ -10,7 +10,7 @@ import { Type } from 'class-transformer';
 export class ProductRequestDto {
   @IsNotEmpty()
   @IsNumber()
-  etype: number;
+  eType: number;
 
   @IsNotEmpty()
   @IsString()
@@ -22,11 +22,14 @@ export class ProductRequestDto {
 
   @IsNotEmpty()
   @IsString()
-  startprice: string;
+  startPrice: string;
+
+  @IsString()
+  bidUnit: string;
 
   @IsNotEmpty()
   @IsString()
-  endtime: string;
+  endTime: string;
 
   @IsArray()
   imagesName: string[];
