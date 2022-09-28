@@ -14,6 +14,7 @@ import { Product } from './entity/product.entity';
 import { ProductFile } from './entity/productFile.entity';
 import { BiddingLog } from './entity/biddingLog.entity';
 import { BidModule } from './bid/bid.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { BidModule } from './bid/bid.module';
     AuthModule,
     ProductModule,
     BidModule,
+    ScheduleModule.forRoot(),
   ],
   controllers: [AppController, UserController],
   providers: [AppService, UserService],

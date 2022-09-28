@@ -101,4 +101,12 @@ export class ProductRepository {
   async updateNowPrice({ queryRunner, productId, price }) {
     await queryRunner.manager.update(Product, productId, { nowPrice: price });
   }
+
+  async updateActiveToFalse(id) {
+    try {
+      await this.productRepository.update(id, { active: false });
+    } catch (error) {
+      throw new HttpException('db error', 400);
+    }
+  }
 }

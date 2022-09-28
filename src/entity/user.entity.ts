@@ -1,4 +1,10 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToMany } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToMany,
+  CreateDateColumn,
+} from 'typeorm';
 import { Exclude } from 'class-transformer';
 import { BiddingLog } from './biddingLog.entity';
 
@@ -6,6 +12,11 @@ import { BiddingLog } from './biddingLog.entity';
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @CreateDateColumn({
+    type: 'timestamp',
+  })
+  createdDate: Date;
 
   @Column()
   loginId: string;

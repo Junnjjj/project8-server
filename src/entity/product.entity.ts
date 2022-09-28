@@ -1,4 +1,10 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  OneToMany,
+  CreateDateColumn,
+} from 'typeorm';
 import { ProductFile } from './productFile.entity';
 import { BiddingLog } from './biddingLog.entity';
 
@@ -6,6 +12,11 @@ import { BiddingLog } from './biddingLog.entity';
 export class Product {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @CreateDateColumn({
+    type: 'timestamp',
+  })
+  createdDate: Date;
 
   @Column()
   eType: number;
@@ -28,8 +39,10 @@ export class Product {
   @Column()
   nowPrice: string;
 
-  @Column()
-  endTime: string;
+  @Column({
+    type: 'timestamp',
+  })
+  endtime: Date;
 
   @Column({ nullable: true })
   mainUrl: string;
