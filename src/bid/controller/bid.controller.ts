@@ -17,6 +17,6 @@ export class BidController {
     @Body() body: BiddingRequestDTO,
     @CurrentUser() user: User,
   ) {
-    return this.bidService.createBidLog({ ProductId, body, user });
+    return this.bidService.createBiddingLog({ ProductId, body, user });
   }
 }

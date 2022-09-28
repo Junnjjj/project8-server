@@ -1,11 +1,17 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { ProductRepository } from '../../product/product.repository';
+import { BiddingLogRepository } from '../biddingLog.repository';
+import { DataSource } from 'typeorm';
 
 @Injectable()
 export class BidService {
-  constructor(private readonly productRepository: ProductRepository) {}
+  constructor(
+    private readonly biddingLogRepository: BiddingLogRepository,
+    private readonly productRepository: ProductRepository,
+    private dataSource: DataSource,
+  ) {}
 
-  async createBidLog({ ProductId, body, user }) {
+  async createBiddingLog({ ProductId, body, user }) {
     const userId = user.id; // userId
     const { price, message, shipping } = body; // Body Data
     const productId = ProductId; // product Id
@@ -27,12 +33,37 @@ export class BidService {
       throw new HttpException('앞선 입찰이 존재합니다.', 401);
     }
 
-    // 3. bidding log 에 저장
+    // todo: user_info 도 추가
+    // 3,4 트랙잭션 형성
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    try {
+      // 3. bidding log 에 저장
+      const biddingLog = await this.biddingLogRepository.createBiddingLog({
+        queryRunner,
+        price,
+        message,
+        shipping,
+        productId,
+        userId,
+      });
 
-    // 4. product nowPrice 수정
+      // 4. product nowPrice 수정
+      await this.productRepository.updateNowPrice({
+        queryRunner,
+        productId,
+        price,
+      });
 
-    // todo: user_info 에도 추가 , biddingLog 저장과 transaction 으로 묶기
+      await queryRunner.commitTransaction();
+      return biddingLog;
+    } catch (err) {
+      await queryRunner.rollbackTransaction();
 
-    return 'ㅇㄹㄴ';
+      throw new HttpException(`트랜잭션 에러가 발생`, 400);
+    } finally {
+      await queryRunner.release();
+    }
   }
 }

@@ -97,4 +97,8 @@ export class ProductRepository {
       throw new HttpException('db error', 400);
     }
   }
+
+  async updateNowPrice({ queryRunner, productId, price }) {
+    await queryRunner.manager.update(Product, productId, { nowPrice: price });
+  }
 }

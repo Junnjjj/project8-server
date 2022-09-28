@@ -29,7 +29,7 @@ export class ProductFileRepository {
 
   async setFKActive({ uploadImgFromServer, imagesName, newProduct }) {
     try {
-      const test = await this.productFileRepository
+      await this.productFileRepository
         .createQueryBuilder('productFile')
         .update()
         .set({ product: newProduct.id })
@@ -38,7 +38,7 @@ export class ProductFileRepository {
         })
         .execute();
 
-      const test2 = await this.productFileRepository
+      await this.productFileRepository
         .createQueryBuilder('productFile')
         .update()
         .set({ active: true })
