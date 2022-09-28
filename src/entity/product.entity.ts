@@ -33,8 +33,13 @@ export class Product {
   @Column()
   nowPrice: string;
 
+  @Column({
+    type: 'timestamp',
+  })
+  endtime: Date;
+
   @Column()
-  endtime: string;
+  active: boolean;
 
   @Column({ nullable: true })
   mainUrl: string;

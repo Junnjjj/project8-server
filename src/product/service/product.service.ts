@@ -3,12 +3,14 @@ import { ProductRepository } from '../product.repository';
 import { ProductRequestDto } from '../dto/product.request.dto';
 import { User } from '../../entity/user.entity';
 import { ProductFileRepository } from '../productFile.repository';
+import { CronService } from '../../common/scheduler/cron.service';
 
 @Injectable()
 export class ProductService {
   constructor(
     private readonly productRepository: ProductRepository,
     private readonly productFileRepository: ProductFileRepository,
+    private readonly cronService: CronService,
   ) {}
 
   async showAllProducts() {
@@ -42,6 +44,7 @@ export class ProductService {
     } = body;
 
     const nowPrice = startprice;
+    const active = true;
 
     const newProduct = await this.productRepository.createPost({
       etype,
@@ -50,6 +53,7 @@ export class ProductService {
       startprice,
       nowPrice,
       endtime,
+      active,
       owner,
     });
 
@@ -65,6 +69,11 @@ export class ProductService {
     const urlQueryResult = await this.productRepository.updateMainURL(
       result,
       newProduct.id,
+    );
+
+    await this.cronService.addBiddingEndCronJob(
+      newProduct.id,
+      new Date(endtime),
     );
 
     return urlQueryResult;
