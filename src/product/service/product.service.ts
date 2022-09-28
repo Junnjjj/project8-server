@@ -60,8 +60,6 @@ export class ProductService {
       newProduct,
     });
 
-    console.log('url', result);
-
     const urlQueryResult = await this.productRepository.updateMainURL(
       result,
       newProduct.id,

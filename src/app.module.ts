@@ -13,6 +13,7 @@ import { ProductModule } from './product/product.module';
 import { Product } from './entity/product.entity';
 import { ProductFile } from './entity/productFile.entity';
 import { BiddingLog } from './entity/biddingLog.entity';
+import { BidModule } from './bid/bid.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { BiddingLog } from './entity/biddingLog.entity';
     UserModule,
     AuthModule,
     ProductModule,
+    BidModule,
   ],
   controllers: [AppController, UserController],
   providers: [AppService, UserService],

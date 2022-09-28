@@ -18,6 +18,6 @@ import { ProductFileRepository } from './productFile.repository';
   ],
   providers: [ProductService, ProductRepository, ProductFileRepository],
   controllers: [ProductController],
-  exports: [ProductService],
+  exports: [ProductService, ProductRepository],
 })
 export class ProductModule {}
