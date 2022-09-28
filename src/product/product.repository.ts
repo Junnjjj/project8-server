@@ -69,4 +69,12 @@ export class ProductRepository {
       throw new HttpException(error, 400);
     }
   }
+
+  async updateActiveToFalse(id) {
+    try {
+      await this.productRepository.update(id, { active: false });
+    } catch (error) {
+      throw new HttpException('db error', 400);
+    }
+  }
 }
