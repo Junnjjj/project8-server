@@ -38,11 +38,13 @@ export class ProductService {
       name,
       description,
       startPrice,
-      endTime,
+      endHour,
       bidUnit,
       imagesName,
       uploadImgFromServer,
     } = body;
+
+    const endDateTime = new Date(Date.now() + 3600 * 1000 * parseInt(endHour));
 
     const newProduct = await this.productRepository.createPost({
       eType,
@@ -50,8 +52,9 @@ export class ProductService {
       description,
       startPrice,
       nowPrice: startPrice,
-      endTime,
+      endHour,
       bidUnit,
+      endTime: endDateTime,
       owner,
     });
 
@@ -67,10 +70,7 @@ export class ProductService {
       newProduct.id,
     );
 
-    await this.cronService.addBiddingEndCronJob(
-      newProduct.id,
-      new Date(endTime),
-    );
+    await this.cronService.addBiddingEndCronJob(newProduct.id, endDateTime);
 
     return urlQueryResult;
   }
