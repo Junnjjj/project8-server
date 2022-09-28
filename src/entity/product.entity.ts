@@ -39,10 +39,13 @@ export class Product {
   @Column()
   nowPrice: string;
 
+  @Column()
+  endHour: string;
+
   @Column({
     type: 'timestamp',
   })
-  endtime: Date;
+  endTime: Date;
 
   @Column({ nullable: true })
   mainUrl: string;

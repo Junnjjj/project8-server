@@ -52,7 +52,7 @@ export class ProductRepository {
       const result = await this.productRepository.save(product);
       return result;
     } catch (error) {
-      throw new HttpException(error, 400);
+      throw new HttpException('db error', 400);
     }
   }
 
@@ -66,8 +66,40 @@ export class ProductRepository {
         .execute();
       return result;
     } catch (error) {
-      throw new HttpException(error, 400);
+      throw new HttpException('db error', 400);
     }
+  }
+
+  async checkActiveById(productId) {
+    try {
+      const result = await this.productRepository
+        .createQueryBuilder('product')
+        .where('id = :id', { id: productId })
+        .getOne();
+
+      return result.active;
+    } catch (error) {
+      throw new HttpException('db error', 400);
+    }
+  }
+
+  async checkBiddingPrice({ productId, biddingPrice }) {
+    try {
+      const query = await this.productRepository
+        .createQueryBuilder('product')
+        .where('id = :id', { id: productId })
+        .getOne();
+      const nowPrice = query.nowPrice;
+
+      const result = parseInt(nowPrice) > parseInt(biddingPrice) ? false : true;
+      return result;
+    } catch (error) {
+      throw new HttpException('db error', 400);
+    }
+  }
+
+  async updateNowPrice({ queryRunner, productId, price }) {
+    await queryRunner.manager.update(Product, productId, { nowPrice: price });
   }
 
   async updateActiveToFalse(id) {

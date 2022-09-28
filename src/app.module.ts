@@ -13,6 +13,7 @@ import { ProductModule } from './product/product.module';
 import { Product } from './entity/product.entity';
 import { ProductFile } from './entity/productFile.entity';
 import { BiddingLog } from './entity/biddingLog.entity';
+import { BidModule } from './bid/bid.module';
 import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
@@ -26,11 +27,12 @@ import { ScheduleModule } from '@nestjs/schedule';
       password: process.env.DB_PASSWD,
       database: process.env.DB_DATABASE,
       entities: [User, Product, ProductFile, BiddingLog],
-      synchronize: false,
+      synchronize: true,
     }),
     UserModule,
     AuthModule,
     ProductModule,
+    BidModule,
     ScheduleModule.forRoot(),
   ],
   controllers: [AppController, UserController],

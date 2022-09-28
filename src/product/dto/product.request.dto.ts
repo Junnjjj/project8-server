@@ -29,7 +29,7 @@ export class ProductRequestDto {
 
   @IsNotEmpty()
   @IsString()
-  endTime: string;
+  endHour: string;
 
   @IsArray()
   imagesName: string[];
