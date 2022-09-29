@@ -3,6 +3,7 @@ import { UsersRequestDto } from './dto/user.request.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../entity/user.entity';
+import { UserProfile } from '../entity/userProfile.entity';
 
 @Injectable()
 export class UserRepository {
@@ -17,7 +18,7 @@ export class UserRepository {
 
       return result;
     } catch (error) {
-      throw new HttpException('db error', 400);
+      throw new HttpException(error, 400);
     }
   }
 
@@ -40,11 +41,9 @@ export class UserRepository {
           id: true,
           name: true,
           passwd: false,
-          tel1: true,
-          tel2: true,
-          tel3: true,
         },
         where: { id: userId },
+        relations: { profile: true },
       });
       return user;
     } catch (error) {

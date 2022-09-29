@@ -15,6 +15,7 @@ import { ProductFile } from './entity/productFile.entity';
 import { BiddingLog } from './entity/biddingLog.entity';
 import { BidModule } from './bid/bid.module';
 import { ScheduleModule } from '@nestjs/schedule';
+import { UserProfile } from './entity/userProfile.entity';
 
 @Module({
   imports: [
@@ -26,7 +27,7 @@ import { ScheduleModule } from '@nestjs/schedule';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWD,
       database: process.env.DB_DATABASE,
-      entities: [User, Product, ProductFile, BiddingLog],
+      entities: [User, Product, ProductFile, BiddingLog, UserProfile],
       synchronize: true,
     }),
     UserModule,
@@ -36,7 +37,7 @@ import { ScheduleModule } from '@nestjs/schedule';
     ScheduleModule.forRoot(),
   ],
   controllers: [AppController, UserController],
-  providers: [AppService, UserService],
+  providers: [AppService],
 })
 export class AppModule {
   private readonly isDev: boolean = process.env.Mode === 'DEV' ? true : false;

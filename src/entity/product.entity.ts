@@ -4,9 +4,11 @@ import {
   PrimaryGeneratedColumn,
   OneToMany,
   CreateDateColumn,
+  ManyToOne,
 } from 'typeorm';
 import { ProductFile } from './productFile.entity';
 import { BiddingLog } from './biddingLog.entity';
+import { User } from './user.entity';
 
 @Entity()
 export class Product {
@@ -52,6 +54,9 @@ export class Product {
 
   @Column()
   owner: number;
+
+  @ManyToOne(() => User, (user) => user.products)
+  user: User;
 
   @OneToMany(() => ProductFile, (productFile) => productFile.product, {
     cascade: true,

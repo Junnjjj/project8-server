@@ -65,6 +65,7 @@ export class ProductService {
       newProduct,
     });
 
+    // todo : 수정
     const urlQueryResult = await this.productRepository.updateMainURL(
       result,
       newProduct.id,
@@ -72,7 +73,7 @@ export class ProductService {
 
     await this.cronService.addBiddingEndCronJob(newProduct.id, endDateTime);
 
-    return urlQueryResult;
+    return result;
   }
 
   async saveProductImg(file, productName) {
