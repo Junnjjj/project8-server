@@ -52,9 +52,11 @@ export class Product {
   @Column({ nullable: true })
   mainUrl: string;
 
-  @Column()
+  // 입찰에 성공한 구매자
+  @Column({ nullable: true })
   owner: number;
 
+  // product 판매자
   @ManyToOne(() => User, (user) => user.products)
   user: User;
 

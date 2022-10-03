@@ -3,7 +3,6 @@ import { UsersRequestDto } from './dto/user.request.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../entity/user.entity';
-import { UserProfile } from '../entity/userProfile.entity';
 
 @Injectable()
 export class UserRepository {
@@ -33,6 +32,18 @@ export class UserRepository {
     }
   }
 
+  async findUserById(id: number): Promise<User | null> {
+    try {
+      const user = await this.usersRepository.findOne({
+        where: { id: id },
+      });
+      return user;
+    } catch (error) {
+      throw new HttpException('db error', 400);
+    }
+  }
+
+  // UseGuards
   async findUserByIdWithoutPassword(userId: number): Promise<User | null> {
     try {
       const user = await this.usersRepository.findOne({
@@ -61,7 +72,7 @@ export class UserRepository {
         currentHashedRefreshToken: token,
       });
     } catch (error) {
-      throw new HttpException(error, 400);
+      throw new HttpException('db error', 400);
     }
   }
 
@@ -75,7 +86,26 @@ export class UserRepository {
         currentHashedRefreshToken: '',
       });
     } catch (error) {
+      throw new HttpException('db error', 400);
+    }
+  }
+
+  async findUserProductData(id: number) {
+    try {
+    } catch (error) {
       throw new HttpException(error, 400);
+    }
+  }
+
+  async findProfileId({ userId }) {
+    try {
+      const result = await this.usersRepository.findOne({
+        where: { id: userId },
+        relations: { profile: true },
+      });
+      return result.profile;
+    } catch (error) {
+      throw new HttpException('db error', 400);
     }
   }
 }

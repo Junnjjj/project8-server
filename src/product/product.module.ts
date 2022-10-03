@@ -8,12 +8,14 @@ import { ProductFile } from '../entity/productFile.entity';
 import { Product } from '../entity/product.entity';
 import { ProductFileRepository } from './productFile.repository';
 import { CronModule } from '../common/scheduler/cron.module';
+import { UserModule } from '../user/user.module';
 
 @Module({
   imports: [
     MulterModule.register({
       dest: './upload',
     }),
+    UserModule,
     TypeOrmModule.forFeature([Product, ProductFile]),
     forwardRef(() => CronModule),
   ],

@@ -15,6 +15,6 @@ import { UserProfile } from '../entity/userProfile.entity';
   ],
   providers: [UserService, UserRepository, UserProfileRepository],
   controllers: [UserController],
-  exports: [UserService, UserRepository],
+  exports: [UserService, UserRepository, UserProfileRepository],
 })
 export class UserModule {}

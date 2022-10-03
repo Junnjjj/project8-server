@@ -2,6 +2,7 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserProfile } from '../entity/userProfile.entity';
 import { Repository } from 'typeorm';
+import { User } from '../entity/user.entity';
 
 @Injectable()
 export class UserProfileRepository {
@@ -20,7 +21,13 @@ export class UserProfileRepository {
       });
       return profile;
     } catch (error) {
-      throw new HttpException(error, 400);
+      throw new HttpException('db error', 400);
     }
+  }
+
+  async plusBiddingProductCount({ queryRunner, userProfile }) {
+    await queryRunner.manager.update(UserProfile, userProfile.id, {
+      biddingProduct: () => 'biddingProduct + 1',
+    });
   }
 }

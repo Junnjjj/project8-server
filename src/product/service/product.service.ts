@@ -4,12 +4,14 @@ import { ProductRequestDto } from '../dto/product.request.dto';
 import { User } from '../../entity/user.entity';
 import { ProductFileRepository } from '../productFile.repository';
 import { CronService } from '../../common/scheduler/cron.service';
+import { UserProfileRepository } from '../../user/userProfile.repository';
 
 @Injectable()
 export class ProductService {
   constructor(
     private readonly productRepository: ProductRepository,
     private readonly productFileRepository: ProductFileRepository,
+    private readonly userProfileRepository: UserProfileRepository,
     private readonly cronService: CronService,
   ) {}
 
@@ -31,7 +33,7 @@ export class ProductService {
   }
 
   async createPost(body: ProductRequestDto, user: User) {
-    const owner = user.id;
+    const userId = user.id;
 
     const {
       eType,
@@ -55,7 +57,7 @@ export class ProductService {
       endHour,
       bidUnit,
       endTime: endDateTime,
-      owner,
+      user: userId,
     });
 
     // uploadImgFromServer : string[] => 외래키 참조
@@ -66,10 +68,11 @@ export class ProductService {
     });
 
     // todo : 수정
-    const urlQueryResult = await this.productRepository.updateMainURL(
-      result,
-      newProduct.id,
-    );
+    await this.productRepository.updateMainURL(result, newProduct.id);
+
+    // await this.userProfileRepository.plusOnSaleProduct({
+    //
+    // })
 
     await this.cronService.addBiddingEndCronJob(newProduct.id, endDateTime);
 

@@ -14,11 +14,9 @@ export class UserProfile {
   @Column()
   photoImg: string;
 
-  // // 입찰 중인 물건
-  // @Column()
-  // biddingProduct: number[];
-  //
-  // // 판매 중인 물건
-  // @Column()
-  // sellingProduct: number[];
+  @Column({ default: 0 })
+  onSaleProduct: number;
+
+  @Column({ default: 0 })
+  biddingProduct: number;
 }

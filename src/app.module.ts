@@ -28,7 +28,7 @@ import { UserProfile } from './entity/userProfile.entity';
       password: process.env.DB_PASSWD,
       database: process.env.DB_DATABASE,
       entities: [User, Product, ProductFile, BiddingLog, UserProfile],
-      synchronize: true,
+      synchronize: false,
     }),
     UserModule,
     AuthModule,

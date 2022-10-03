@@ -1,4 +1,8 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  HttpException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { UsersRequestDto } from '../dto/user.request.dto';
 import { UserRepository } from '../user.repository';
@@ -10,6 +14,15 @@ export class UserService {
     private readonly userRepository: UserRepository,
     private readonly userProfileRepository: UserProfileRepository,
   ) {}
+
+  async getUserProductData(id: number) {
+    const isUserExist = await this.userRepository.findUserById(id);
+    if (!isUserExist) {
+      throw new HttpException('해당하는 유저가 존재하지 않습니다..', 401);
+    }
+
+    const result = await this.userRepository.findUserProductData(id);
+  }
 
   async signUp(body: UsersRequestDto) {
     const { loginId, passwd, name, tel1, tel2, tel3 } = body;
@@ -27,7 +40,7 @@ export class UserService {
       loginId,
       passwd: hashedPassword,
       name,
-      profileId: profile,
+      profile: profile,
     });
 
     return user;

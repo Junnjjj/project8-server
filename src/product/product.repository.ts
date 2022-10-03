@@ -89,9 +89,9 @@ export class ProductRepository {
         .createQueryBuilder('product')
         .where('id = :id', { id: productId })
         .getOne();
-      const nowPrice = query.nowPrice;
+      const nowPrice = Number(query.nowPrice);
 
-      const result = parseInt(nowPrice) > parseInt(biddingPrice) ? false : true;
+      const result = Number(nowPrice) < Number(biddingPrice);
       return result;
     } catch (error) {
       throw new HttpException('db error', 400);

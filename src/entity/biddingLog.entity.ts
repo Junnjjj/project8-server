@@ -18,7 +18,7 @@ export class BiddingLog {
   @Column()
   price: number;
 
-  @Column({ default: true })
+  @Column({ default: false })
   biddingSuccess: boolean;
 
   @CreateDateColumn()
