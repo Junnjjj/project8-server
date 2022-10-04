@@ -24,4 +24,15 @@ export class CronService {
 
     this.logger.debug(`${id} 경매가 ${endDate}에 종료됩니다.`);
   }
+
+  async addAllBiddingEndCronJob() {
+    const productList = await this.productRepository.findAllProducts();
+
+    for (const product of productList) {
+      if (product.endTime > new Date(Date.now())) {
+        const endDateTime = new Date(product.endTime);
+        await this.addBiddingEndCronJob(product.id.toString(), endDateTime);
+      }
+    }
+  }
 }

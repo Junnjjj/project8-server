@@ -50,6 +50,7 @@ export class ProductService {
       uploadImgFromServer,
     } = body;
 
+    const createdDate = new Date(Date.now());
     const endDateTime = new Date(Date.now() + 3600 * 1000 * parseInt(endHour));
 
     // transaction 생성
@@ -59,6 +60,7 @@ export class ProductService {
     try {
       // 1. product 생성
       const newProduct = await this.productRepository.createPost(queryRunner, {
+        createdDate,
         eType,
         name,
         description,

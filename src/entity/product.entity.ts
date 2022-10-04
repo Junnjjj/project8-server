@@ -15,7 +15,7 @@ export class Product {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @CreateDateColumn({
+  @Column({
     type: 'timestamp',
   })
   createdDate: Date;
