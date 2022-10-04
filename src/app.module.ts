@@ -27,7 +27,7 @@ import { ScheduleModule } from '@nestjs/schedule';
       password: process.env.DB_PASSWD,
       database: process.env.DB_DATABASE,
       entities: [User, Product, ProductFile, BiddingLog],
-      synchronize: true,
+      synchronize: false,
     }),
     UserModule,
     AuthModule,

@@ -72,7 +72,7 @@ export class ProductService {
 
     await this.cronService.addBiddingEndCronJob(newProduct.id, endDateTime);
 
-    return urlQueryResult;
+    return result;
   }
 
   async saveProductImg(file, productName) {
