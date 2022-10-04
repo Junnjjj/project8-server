@@ -5,6 +5,7 @@ import {
   ManyToOne,
   ManyToMany,
   CreateDateColumn,
+  JoinTable,
 } from 'typeorm';
 import { Product } from './product.entity';
 import { User } from './user.entity';
@@ -17,7 +18,7 @@ export class BiddingLog {
   @Column()
   price: number;
 
-  @Column({ default: true })
+  @Column({ default: false })
   biddingSuccess: boolean;
 
   @CreateDateColumn()
@@ -32,6 +33,6 @@ export class BiddingLog {
   @ManyToOne(() => Product, (product) => product.biddingLogs)
   product: Product;
 
-  @ManyToMany(() => User, (user) => user.biddingLogs)
-  user: User[];
+  @ManyToOne(() => User, (user) => user.biddingLogs)
+  user: User;
 }

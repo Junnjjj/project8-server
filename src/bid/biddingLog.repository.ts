@@ -27,4 +27,19 @@ export class BiddingLogRepository {
     });
     return result;
   }
+
+  // 겹치는 입찰 물품인지
+  async isBiddingProduct({ productId, userId }) {
+    try {
+      const result = await this.biddingLogRepository
+        .createQueryBuilder('biddingLog')
+        .where('productId = :productId', { productId: productId })
+        .andWhere('userId = :userId', { userId: userId })
+        .getMany();
+
+      return result.length > 1 ? true : false;
+    } catch (error) {
+      throw new HttpException(error, 400);
+    }
+  }
 }

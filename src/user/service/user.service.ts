@@ -1,13 +1,28 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  HttpException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { UsersRequestDto } from '../dto/user.request.dto';
-import { Repository } from 'typeorm';
-import { User } from '../../entity/user.entity';
 import { UserRepository } from '../user.repository';
+import { UserProfileRepository } from '../userProfile.repository';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(
+    private readonly userRepository: UserRepository,
+    private readonly userProfileRepository: UserProfileRepository,
+  ) {}
+
+  async getUserProductData(id: number) {
+    const isUserExist = await this.userRepository.findUserById(id);
+    if (!isUserExist) {
+      throw new HttpException('해당하는 유저가 존재하지 않습니다..', 401);
+    }
+
+    const result = await this.userRepository.findUserProductData(id);
+  }
 
   async signUp(body: UsersRequestDto) {
     const { loginId, passwd, name, tel1, tel2, tel3 } = body;
@@ -19,14 +34,15 @@ export class UserService {
 
     const hashedPassword = await bcrypt.hash(passwd, 12);
 
+    const profile = await this.userProfileRepository.createProfile(tel1);
+
     const user = await this.userRepository.createUser({
       loginId,
       passwd: hashedPassword,
       name,
-      tel1,
-      tel2,
-      tel3,
+      profile: profile,
     });
+
     return user;
   }
 
