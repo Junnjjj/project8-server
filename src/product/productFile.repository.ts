@@ -27,41 +27,24 @@ export class ProductFileRepository {
     }
   }
 
-  async setFKActive({ uploadImgFromServer, imagesName, newProduct }) {
-    try {
-      await this.productFileRepository
-        .createQueryBuilder('productFile')
-        .update()
-        .set({ product: newProduct.id })
-        .where('fileName IN (:fileName)', {
-          fileName: uploadImgFromServer,
-        })
-        .execute();
+  async setFKActive(
+    queryRunner,
+    { uploadImgFromServer, imagesName, newProduct },
+  ) {
+    await queryRunner.manager.query(
+      `UPDATE product_file SET productId = ? WHERE fileName IN (?)`,
+      [newProduct.id, uploadImgFromServer],
+    );
 
-      await this.productFileRepository
-        .createQueryBuilder('productFile')
-        .update()
-        .set({ active: true })
-        .where('fileName IN (:fileName)', {
-          fileName: uploadImgFromServer,
-        })
-        .andWhere('originalName IN (:originalName)', {
-          originalName: imagesName,
-        })
-        .execute();
+    await queryRunner.manager.query(
+      `UPDATE product_file SET active = true WHERE (fileName IN (?) AND originalName IN (?))`,
+      [uploadImgFromServer, imagesName],
+    );
 
-      const mainURL = await this.productFileRepository
-        .createQueryBuilder('productFile')
-        .where('active = :active', {
-          active: true,
-        })
-        .andWhere('fileName IN (:fileName)', {
-          fileName: uploadImgFromServer,
-        })
-        .getOne();
-      return mainURL;
-    } catch (error) {
-      throw new HttpException(error, 400);
-    }
+    const mainURL = await queryRunner.manager.query(
+      `SELECT * FROM product_file WHERE active=true AND fileName IN (?)`,
+      uploadImgFromServer,
+    );
+    return mainURL[0];
   }
 }

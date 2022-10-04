@@ -30,4 +30,10 @@ export class UserProfileRepository {
       biddingProduct: () => 'biddingProduct + 1',
     });
   }
+
+  async plusOnSaleProduct(queryRunner, userProfile) {
+    await queryRunner.manager.update(UserProfile, userProfile.id, {
+      onSaleProduct: () => 'onSaleProduct + 1',
+    });
+  }
 }

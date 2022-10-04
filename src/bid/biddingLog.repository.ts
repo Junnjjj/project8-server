@@ -28,6 +28,7 @@ export class BiddingLogRepository {
     return result;
   }
 
+  // 겹치는 입찰 물품인지
   async isBiddingProduct({ productId, userId }) {
     try {
       const result = await this.biddingLogRepository

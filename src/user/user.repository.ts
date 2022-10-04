@@ -14,8 +14,9 @@ export class UserRepository {
   async createUser(user) {
     try {
       const result = await this.usersRepository.save(user);
+      const response = { message: 'SignUp success', loginId: result.loginId };
 
-      return result;
+      return response;
     } catch (error) {
       throw new HttpException(error, 400);
     }
