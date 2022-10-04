@@ -2,11 +2,15 @@ import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
-  ManyToMany,
   CreateDateColumn,
+  OneToMany,
+  JoinColumn,
+  OneToOne,
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
 import { BiddingLog } from './biddingLog.entity';
+import { Product } from './product.entity';
+import { UserProfile } from './userProfile.entity';
 
 @Entity()
 export class User {
@@ -27,19 +31,17 @@ export class User {
   @Column()
   name: string;
 
-  @Column()
-  tel1: number;
-
-  @Column()
-  tel2: number;
-
-  @Column()
-  tel3: number;
-
   @Column({ nullable: true })
   @Exclude()
   currentHashedRefreshToken?: string;
 
-  @ManyToMany(() => BiddingLog, (biddingLog) => biddingLog.user)
+  @OneToOne(() => UserProfile)
+  @JoinColumn()
+  profile: UserProfile;
+
+  @OneToMany(() => Product, (product) => product.user)
+  products: Product[];
+
+  @OneToMany(() => BiddingLog, (biddingLog) => biddingLog.user)
   biddingLogs: BiddingLog[];
 }

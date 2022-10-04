@@ -2,12 +2,16 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { ProductRepository } from '../../product/product.repository';
 import { BiddingLogRepository } from '../biddingLog.repository';
 import { DataSource } from 'typeorm';
+import { UserProfileRepository } from '../../user/userProfile.repository';
+import { UserRepository } from '../../user/user.repository';
 
 @Injectable()
 export class BidService {
   constructor(
     private readonly biddingLogRepository: BiddingLogRepository,
     private readonly productRepository: ProductRepository,
+    private readonly userRepository: UserRepository,
+    private readonly userProfileRepository: UserProfileRepository,
     private dataSource: DataSource,
   ) {}
 
@@ -33,8 +37,7 @@ export class BidService {
       throw new HttpException('앞선 입찰이 존재합니다.', 401);
     }
 
-    // todo: user_info 도 추가
-    // 3,4 트랙잭션 형성
+    // 트랙잭션 형성
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
@@ -55,6 +58,21 @@ export class BidService {
         productId,
         price,
       });
+
+      // 5. biddingProduct + 1
+      const isBiddingProduct = await this.biddingLogRepository.isBiddingProduct(
+        { productId, userId },
+      );
+
+      // (입찰 중인 물건이 아닐때만)
+      if (!isBiddingProduct) {
+        const userProfile = await this.userRepository.findProfileId({ userId });
+
+        await this.userProfileRepository.plusBiddingProductCount({
+          queryRunner,
+          userProfile,
+        });
+      }
 
       await queryRunner.commitTransaction();
       return biddingLog;

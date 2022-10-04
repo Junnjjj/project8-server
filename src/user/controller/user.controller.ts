@@ -6,6 +6,7 @@ import {
   UseGuards,
   Req,
   Res,
+  Param,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { UserService } from '../service/user.service';
@@ -28,6 +29,11 @@ export class UserController {
     return user;
   }
 
+  @Get(':id')
+  getUserProductData(@Param('id') id: number) {
+    return this.userService.getUserProductData(id);
+  }
+
   @Post('signup')
   async signUp(@Body() body: UsersRequestDto) {
     return this.userService.signUp(body);
@@ -45,7 +51,6 @@ export class UserController {
     );
 
     // Set-Cookie 에 Refresh Token 저장
-    // res.cookie('refreshToken', RefreshToken.token, RefreshToken.options);
     res.cookie('refreshToken', RefreshToken.token, RefreshToken.options);
 
     // Access Token response data 에 반환

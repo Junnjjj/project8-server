@@ -14,10 +14,11 @@ export class UserRepository {
   async createUser(user) {
     try {
       const result = await this.usersRepository.save(user);
+      const response = { message: 'SignUp success', loginId: result.loginId };
 
-      return result;
+      return response;
     } catch (error) {
-      throw new HttpException('db error', 400);
+      throw new HttpException(error, 400);
     }
   }
 
@@ -32,6 +33,18 @@ export class UserRepository {
     }
   }
 
+  async findUserById(id: number): Promise<User | null> {
+    try {
+      const user = await this.usersRepository.findOne({
+        where: { id: id },
+      });
+      return user;
+    } catch (error) {
+      throw new HttpException('db error', 400);
+    }
+  }
+
+  // UseGuards
   async findUserByIdWithoutPassword(userId: number): Promise<User | null> {
     try {
       const user = await this.usersRepository.findOne({
@@ -40,11 +53,9 @@ export class UserRepository {
           id: true,
           name: true,
           passwd: false,
-          tel1: true,
-          tel2: true,
-          tel3: true,
         },
         where: { id: userId },
+        relations: { profile: true },
       });
       return user;
     } catch (error) {
@@ -62,7 +73,7 @@ export class UserRepository {
         currentHashedRefreshToken: token,
       });
     } catch (error) {
-      throw new HttpException(error, 400);
+      throw new HttpException('db error', 400);
     }
   }
 
@@ -76,7 +87,26 @@ export class UserRepository {
         currentHashedRefreshToken: '',
       });
     } catch (error) {
+      throw new HttpException('db error', 400);
+    }
+  }
+
+  async findUserProductData(id: number) {
+    try {
+    } catch (error) {
       throw new HttpException(error, 400);
+    }
+  }
+
+  async findProfileId({ userId }) {
+    try {
+      const result = await this.usersRepository.findOne({
+        where: { id: userId },
+        relations: { profile: true },
+      });
+      return result.profile;
+    } catch (error) {
+      throw new HttpException('db error', 400);
     }
   }
 }
