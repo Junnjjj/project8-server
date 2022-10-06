@@ -12,7 +12,36 @@ export class ProductRepository {
 
   async findAllProducts(): Promise<Product[] | null> {
     try {
-      const productList = await this.productRepository.find({});
+      // const productList = await this.productRepository.find({
+      //   select: {
+      //     id: true,
+      //     name: true,
+      //     description: true,
+      //     endTime: true,
+      //     bidUnit: true,
+      //     nowPrice: true,
+      //     startPrice: true,
+      //     endHour: true,
+      //     mainUrl: true,
+      //     active: true,
+      //     user: {
+      //       id: true,
+      //       createdDate: false,
+      //       loginId: false,
+      //       passwd: false,
+      //       name: false,
+      //       currentHashedRefreshToken: false,
+      //     },
+      //   },
+      //   where: { active: true },
+      //   relations: { user: true },
+      // });
+
+      const productList = await this.productRepository.query(`
+                SELECT p.id, p.name, p.endTime, p.nowPrice, p.endTime, p.mainUrl, p.active, p.userId, count(b.id) as biddingCount
+                FROM product as p left outer join bidding_log as b on p.id = b.productId
+                WHERE p.active = true
+                group by p.id`);
       return productList;
     } catch (error) {
       throw new HttpException('db error', 400);
@@ -65,6 +94,21 @@ export class ProductRepository {
         .getOne();
 
       return result.active;
+    } catch (error) {
+      throw new HttpException('db error', 400);
+    }
+  }
+
+  async checkProductUserById({ productId, userId }) {
+    try {
+      const product = await this.productRepository.findOne({
+        where: { id: productId },
+        relations: {
+          user: true,
+        },
+      });
+
+      return product.user.id === userId ? true : false;
     } catch (error) {
       throw new HttpException('db error', 400);
     }

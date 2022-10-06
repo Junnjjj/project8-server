@@ -28,7 +28,25 @@ export class BidService {
       throw new HttpException('입찰이 종료된 상품입니다', 401);
     }
 
-    // 2. bidding 가격이 nowPrice 보다 큰지 확인
+    //2. 자기 자신 물품인지 확인,
+    const isProductSeller = await this.productRepository.checkProductUserById({
+      productId,
+      userId,
+    });
+    if (isProductSeller) {
+      throw new HttpException('자신의 물품은 입찰할 수 없습니다', 401);
+    }
+
+    // 3. 이전 입찰이 자기 자신인지 확인
+    const prevBidIsMine = await this.biddingLogRepository.checkPrevBiddingLog({
+      productId,
+      userId,
+    });
+    if (prevBidIsMine) {
+      throw new HttpException('연달아 입찰하실 수 없습니다.', 401);
+    }
+
+    // 4. bidding 가격이 nowPrice 보다 큰지 확인
     const checkBiddingPrice = await this.productRepository.checkBiddingPrice({
       productId,
       biddingPrice: price,
@@ -42,7 +60,7 @@ export class BidService {
     await queryRunner.connect();
     await queryRunner.startTransaction();
     try {
-      // 3. bidding log 에 저장
+      // 5. bidding log 에 저장
       const biddingLog = await this.biddingLogRepository.createBiddingLog({
         queryRunner,
         price,
@@ -52,19 +70,19 @@ export class BidService {
         userId,
       });
 
-      // 4. product nowPrice 수정
+      // 6. product nowPrice 수정
       await this.productRepository.updateNowPrice({
         queryRunner,
         productId,
         price,
       });
 
-      // 5. biddingProduct + 1
+      // 7. biddingProduct + 1
       const isBiddingProduct = await this.biddingLogRepository.isBiddingProduct(
         { productId, userId },
       );
 
-      // (입찰 중인 물건이 아닐때만)
+      // 8.(입찰 중인 물건이 아닐때만)
       if (!isBiddingProduct) {
         const userProfile = await this.userRepository.findProfileId({ userId });
 

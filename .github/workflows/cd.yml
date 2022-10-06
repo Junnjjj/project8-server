@@ -22,6 +22,7 @@ jobs:
           script: |
             pm2 kill
             cd node/project8-server
+            npm ci
             git stash && git pull origin develop && git stash pop
             git status
             nest build

@@ -37,7 +37,23 @@ export class BiddingLogRepository {
         .andWhere('userId = :userId', { userId: userId })
         .getMany();
 
-      return result.length > 1 ? true : false;
+      return result.length > 0 ? true : false;
+    } catch (error) {
+      throw new HttpException('db error', 400);
+    }
+  }
+
+  // 이전 입찰이 자기 자신인지 확인
+  async checkPrevBiddingLog({ productId, userId }) {
+    try {
+      const biddingLog = await this.biddingLogRepository
+        .createQueryBuilder('biddingLog')
+        .leftJoinAndSelect('biddingLog.user', 'user')
+        .where('productId = :productId', { productId: productId })
+        .orderBy({ 'biddingLog.createdDate': 'DESC' })
+        .getOne();
+
+      return biddingLog.user.id === userId ? true : false;
     } catch (error) {
       throw new HttpException(error, 400);
     }
