@@ -21,6 +21,22 @@ export class ProductRepository {
     }
   }
 
+  async findProductPId(pid) {
+    try {
+      const result = await this.productRepository.findOne({
+        where: {
+          id: pid,
+        },
+        relations: {
+          user: true,
+        },
+      });
+      return result;
+    } catch (error) {
+      throw new HttpException('db error', 400);
+    }
+  }
+
   async findProductsByPage(
     pageNum: number,
     limitNum: number,
@@ -154,5 +170,9 @@ export class ProductRepository {
     } catch (error) {
       throw new HttpException('db error', 400);
     }
+  }
+
+  async updateOwner({ queryRunner, pid, id }) {
+    await queryRunner.manager.update(Product, pid, { owner: id });
   }
 }

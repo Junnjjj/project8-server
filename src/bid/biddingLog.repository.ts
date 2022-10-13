@@ -2,6 +2,7 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BiddingLog } from '../entity/biddingLog.entity';
 import { Repository } from 'typeorm';
+import { Product } from '../entity/product.entity';
 
 @Injectable()
 export class BiddingLogRepository {
@@ -37,7 +38,7 @@ export class BiddingLogRepository {
         .andWhere('userId = :userId', { userId: userId })
         .getMany();
 
-      return result.length > 0 ? true : false;
+      return result.length >= 1 ? true : false;
     } catch (error) {
       throw new HttpException('db error', 400);
     }
@@ -56,8 +57,23 @@ export class BiddingLogRepository {
       if (!biddingLog) return false;
       return biddingLog.user.id === userId ? true : false;
     } catch (error) {
-      console.log(error);
-      throw new HttpException(error, 400);
+      throw new HttpException('db error', 400);
+    }
+  }
+
+  async winningBid(productId) {
+    try {
+      const biddingLog = await this.biddingLogRepository
+        .createQueryBuilder('biddingLog')
+        .leftJoinAndSelect('biddingLog.user', 'user')
+        .where('productId = :productId', { productId: productId })
+        .orderBy({ 'biddingLog.createdDate': 'DESC' })
+        .getOne();
+
+      if (!biddingLog) return false;
+      return biddingLog;
+    } catch (error) {
+      throw new HttpException('db error', 400);
     }
   }
 
@@ -71,7 +87,13 @@ export class BiddingLogRepository {
         .getMany();
       return result;
     } catch (error) {
-      throw new HttpException(error, 400);
+      throw new HttpException('db error', 400);
     }
+  }
+
+  async updateBiddingSuccess({ queryRunner, logId }) {
+    await queryRunner.manager.update(BiddingLog, logId, {
+      biddingSuccess: true,
+    });
   }
 }

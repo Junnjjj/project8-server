@@ -19,7 +19,6 @@ export class BidService {
     const productId = id;
 
     return await this.biddingLogRepository.getBiddingLog(productId);
-    // return await this.productRepository.getBiddingLog(productId);
   }
 
   async createBiddingLog({ ProductId, body, user }) {
