@@ -5,6 +5,7 @@ import {
   OneToMany,
   CreateDateColumn,
   ManyToOne,
+  JoinColumn,
 } from 'typeorm';
 import { ProductFile } from './productFile.entity';
 import { BiddingLog } from './biddingLog.entity';
@@ -58,6 +59,7 @@ export class Product {
 
   // product 판매자
   @ManyToOne(() => User, (user) => user.products)
+  @JoinColumn({ name: 'userId' })
   user: User;
 
   @OneToMany(() => ProductFile, (productFile) => productFile.product, {

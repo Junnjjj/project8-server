@@ -15,6 +15,13 @@ export class BidService {
     private dataSource: DataSource,
   ) {}
 
+  async getBiddingLog(id) {
+    const productId = id;
+
+    return await this.biddingLogRepository.getBiddingLog(productId);
+    // return await this.productRepository.getBiddingLog(productId);
+  }
+
   async createBiddingLog({ ProductId, body, user }) {
     const userId = user.id; // userId
     const { price, message, shipping } = body; // Body Data

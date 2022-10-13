@@ -53,7 +53,23 @@ export class BiddingLogRepository {
         .orderBy({ 'biddingLog.createdDate': 'DESC' })
         .getOne();
 
+      if (!biddingLog) return false;
       return biddingLog.user.id === userId ? true : false;
+    } catch (error) {
+      console.log(error);
+      throw new HttpException(error, 400);
+    }
+  }
+
+  async getBiddingLog(productId) {
+    try {
+      const result = await this.biddingLogRepository
+        .createQueryBuilder('biddingLog')
+        // .leftJoinAndSelect('biddingLog.product', 'product')
+        .where('productId = :productId', { productId: productId })
+        .orderBy({ 'biddingLog.createdDate': 'ASC' })
+        .getMany();
+      return result;
     } catch (error) {
       throw new HttpException(error, 400);
     }
