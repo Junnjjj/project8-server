@@ -8,9 +8,13 @@ import { BiddingLog } from '../entity/biddingLog.entity';
 import { UserModule } from '../user/user.module';
 
 @Module({
-  imports: [UserModule, ProductModule, TypeOrmModule.forFeature([BiddingLog])],
+  imports: [
+    UserModule,
+    TypeOrmModule.forFeature([BiddingLog]),
+    forwardRef(() => ProductModule),
+  ],
   controllers: [BidController],
   providers: [BidService, BiddingLogRepository],
-  exports: [BidService],
+  exports: [BidService, BiddingLogRepository],
 })
 export class BidModule {}

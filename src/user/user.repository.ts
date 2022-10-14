@@ -98,7 +98,7 @@ export class UserRepository {
     }
   }
 
-  async findProfileId({ userId }) {
+  async findProfileId(userId) {
     try {
       const result = await this.usersRepository.findOne({
         where: { id: userId },
