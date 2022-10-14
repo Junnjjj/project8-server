@@ -89,7 +89,7 @@ export class ProductService {
       );
 
       // 4. user_profile 에 onSaleProduct +1 추가
-      const userProfile = await this.userRepository.findProfileId({ userId });
+      const userProfile = await this.userRepository.findProfileId(userId);
 
       await this.userProfileRepository.plusOnSaleProduct(
         queryRunner,

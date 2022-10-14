@@ -33,29 +33,31 @@ export class CronService {
         // 2. product 판매자의 onSaleProduct -1
         const product = await this.productRepository.findProductPId(pid);
         const userId = product.user.id;
-        const userProfile = await this.userRepository.findProfileId({ userId });
+        const userProfile = await this.userRepository.findProfileId(userId);
 
         await this.userProfileRepository.minusOnSaleProduct(
           queryRunner,
           userProfile,
         );
 
-        // 3. 입찰하고 있는 사용자 : 입찰중인 물품 수 -1
-        const isBiddingProduct =
-          await this.biddingLogRepository.isBiddingProduct({
-            productId: pid,
-            userId,
-          });
-
-        // (해당 물품을 입찰 중이면)
-        if (isBiddingProduct) {
-          await this.userProfileRepository.minusBiddingProductCount(
-            queryRunner,
-            userProfile,
-          );
+        // 3. 입찰한 사람들 biddingProduct - 1
+        const biddingUserIds =
+          await this.biddingLogRepository.distinctBiddingUserId(pid);
+        // (빈배열이 아니면 => 입찰한 사람이 있을경우)
+        if (biddingUserIds) {
+          for (let i = 0; i < biddingUserIds.length; i++) {
+            const individualUserId = biddingUserIds[i].userId;
+            const individualProfile = await this.userRepository.findProfileId(
+              individualUserId,
+            );
+            await this.userProfileRepository.minusBiddingProductCount(
+              queryRunner,
+              individualProfile,
+            );
+          }
         }
 
-        // 4. product의 owner 정하기
+        // 4. product 의 owner 정하기
         // 5. bidding Log => biddingSuccess True 설정
         const ownerLog = await this.biddingLogRepository.winningBid(pid);
         // (입찰이 성공하였으면)

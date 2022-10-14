@@ -90,7 +90,7 @@ export class BidService {
 
       // 8.(입찰 중인 물건이 아닐때만)
       if (!isBiddingProduct) {
-        const userProfile = await this.userRepository.findProfileId({ userId });
+        const userProfile = await this.userRepository.findProfileId(userId);
 
         await this.userProfileRepository.plusBiddingProductCount({
           queryRunner,

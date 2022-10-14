@@ -44,6 +44,21 @@ export class BiddingLogRepository {
     }
   }
 
+  // 입찰 중인 물품에 대한 중복을 제거한 userId
+  async distinctBiddingUserId(productId) {
+    try {
+      const result = await this.biddingLogRepository
+        .createQueryBuilder('biddingLog')
+        .select('biddingLog.userId')
+        .where('productId = :productId', { productId: productId })
+        .groupBy('userId')
+        .getRawMany();
+      return result;
+    } catch (error) {
+      throw new HttpException('db error', 400);
+    }
+  }
+
   // 이전 입찰이 자기 자신인지 확인
   async checkPrevBiddingLog({ productId, userId }) {
     try {
