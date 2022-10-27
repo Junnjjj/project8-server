@@ -82,7 +82,20 @@ export class UserController {
     @CurrentUser() user,
   ): any {
     const jwt = req.cookies['refreshToken'];
-    console.log(jwt);
     return res.send(jwt);
   }
+
+  // // 입찰 중인 물건
+  // @Get('/biddingProducts')
+  // @UseGuards(JwtAuthGuard)
+  // getBiddingProductsList(@CurrentUser() user) {
+  //   return this.userService.getBiddingProductList(user);
+  // }
+  //
+  // // 판매중인 물건
+  // @Get('/onSaleProducts')
+  // @UseGuards(JwtAuthGuard)
+  // getOnSaleProducts(@CurrentUser() user) {
+  //   return;
+  // }
 }

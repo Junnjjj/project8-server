@@ -1,4 +1,4 @@
-import { HttpException, Injectable, Logger } from '@nestjs/common';
+import { HttpException, Inject, Injectable, Logger } from '@nestjs/common';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { CronJob } from 'cron';
 import { ProductRepository } from '../../product/product.repository';
@@ -6,6 +6,7 @@ import { UserProfileRepository } from '../../user/userProfile.repository';
 import { DataSource } from 'typeorm';
 import { UserRepository } from '../../user/user.repository';
 import { BiddingLogRepository } from '../../bid/biddingLog.repository';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class CronService {
@@ -22,8 +23,10 @@ export class CronService {
 
   async addBiddingEndCronJob(pid: string, endDate: Date) {
     const job = new CronJob(endDate, async () => {
-      this.logger.debug(`(${pid} 경매 종료. 종료 시간: ${endDate}`);
-      // 1. product의 active를 false로 설정
+      this.logger.debug(
+        `item number : ${pid} bidding finish. bidding time is : ${endDate}`,
+      );
+      // 1. product 의 active 를 false 로 설정
       await this.productRepository.updateActiveToFalse(pid);
 
       const queryRunner = this.dataSource.createQueryRunner();
@@ -57,19 +60,19 @@ export class CronService {
           }
         }
 
-        // 4. product 의 owner 정하기
-        // 5. bidding Log => biddingSuccess True 설정
-        const ownerLog = await this.biddingLogRepository.winningBid(pid);
+        const ownerLog = await this.biddingLogRepository.getWinningBid(pid);
         // (입찰이 성공하였으면)
         if (ownerLog) {
           const logId = ownerLog.id;
           const ownerId = ownerLog.user.id;
+          // 4. product 의 owner 정하기
           await this.productRepository.updateOwner({
             queryRunner,
             pid,
             id: ownerId,
           });
 
+          // 5. bidding Log => biddingSuccess True 설정
           await this.biddingLogRepository.updateBiddingSuccess({
             queryRunner,
             logId,
@@ -83,15 +86,16 @@ export class CronService {
         throw new HttpException('트랜잭션 에러 발생', 400);
       } finally {
         await queryRunner.release();
+        this.schedulerRegistry.deleteCronJob(pid);
       }
-
-      this.schedulerRegistry.deleteCronJob(pid);
     });
 
     this.schedulerRegistry.addCronJob(pid, job);
     job.start();
 
-    this.logger.debug(`${pid} 경매가 ${endDate}에 종료됩니다.`);
+    this.logger.debug(
+      `Product id ${pid} is bidding start, Bidding finish at ${endDate}`,
+    );
   }
 
   async addAllBiddingEndCronJob() {
