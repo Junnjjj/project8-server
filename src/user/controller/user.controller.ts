@@ -82,7 +82,6 @@ export class UserController {
     @CurrentUser() user,
   ): any {
     const jwt = req.cookies['refreshToken'];
-    console.log(jwt);
     return res.send(jwt);
   }
 }

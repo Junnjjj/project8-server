@@ -2,7 +2,6 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BiddingLog } from '../entity/biddingLog.entity';
 import { Repository } from 'typeorm';
-import { Product } from '../entity/product.entity';
 
 @Injectable()
 export class BiddingLogRepository {
@@ -76,7 +75,7 @@ export class BiddingLogRepository {
     }
   }
 
-  async winningBid(productId) {
+  async getWinningBid(productId) {
     try {
       const biddingLog = await this.biddingLogRepository
         .createQueryBuilder('biddingLog')
@@ -96,7 +95,6 @@ export class BiddingLogRepository {
     try {
       const result = await this.biddingLogRepository
         .createQueryBuilder('biddingLog')
-        // .leftJoinAndSelect('biddingLog.product', 'product')
         .where('productId = :productId', { productId: productId })
         .orderBy({ 'biddingLog.createdDate': 'ASC' })
         .getMany();
@@ -110,5 +108,36 @@ export class BiddingLogRepository {
     await queryRunner.manager.update(BiddingLog, logId, {
       biddingSuccess: true,
     });
+  }
+
+  async getBiddingProducts(userId) {
+    // select productId from bidding_log where userId=2 and biddingSuccess=0 group by productId;
+    try {
+      const productIds = await this.biddingLogRepository
+        .createQueryBuilder('biddingLog')
+        .select(['productId', 'MAX(price) as price'])
+        .where('userId = :userId', { userId: userId })
+        .andWhere('biddingSuccess = 0')
+        .groupBy('productId')
+        .getRawMany();
+      return productIds;
+    } catch (error) {
+      throw new HttpException('db error', 400);
+    }
+  }
+
+  async getBiddingCount(productId) {
+    // select count(*) from bidding_log where productId=4
+    try {
+      const biddingCount = await this.biddingLogRepository
+        .createQueryBuilder('biddingLog')
+        .select('count(*) as count')
+        .where('productId = :productId', { productId: productId })
+        .getRawOne();
+
+      return biddingCount;
+    } catch (error) {
+      throw new HttpException('db error', 400);
+    }
   }
 }
