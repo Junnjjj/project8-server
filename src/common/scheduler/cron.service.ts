@@ -6,7 +6,6 @@ import { UserProfileRepository } from '../../user/userProfile.repository';
 import { DataSource } from 'typeorm';
 import { UserRepository } from '../../user/user.repository';
 import { BiddingLogRepository } from '../../bid/biddingLog.repository';
-import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class CronService {

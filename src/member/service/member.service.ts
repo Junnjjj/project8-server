@@ -34,7 +34,7 @@ export class MemberService {
     // 3. 하나로 만들기
     price.forEach((item, idx: number) => {
       for (let i = 0; i < productLists.length; i++) {
-        if ((productLists[i]['bidPrice'] = price[i].id)) {
+        if (productLists[i]['id'] === item.id) {
           productLists[i]['bidPrice'] = String(item.price);
         }
       }
@@ -76,7 +76,7 @@ export class MemberService {
   // 판매 완료한 물건
   async getSaleProducts(user) {
     const userId = user.id;
-    const productLists = await this.productRepository.getSaledProducts(userId);
+    const productLists = await this.productRepository.getSaleProducts(userId);
 
     return productLists;
   }

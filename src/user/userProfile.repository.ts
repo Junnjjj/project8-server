@@ -13,7 +13,12 @@ export class UserProfileRepository {
 
   async createProfile(tel) {
     try {
-      const imgUrl = 'http://localhost:8080/media/icons/logo.png';
+      const url =
+        process.env.MODE === 'DEV'
+          ? 'http://localhost:8080'
+          : process.env.ORIGIN;
+
+      const imgUrl = `${url}/media/icons/logo.png`;
 
       const profile = await this.userProfileRepository.save({
         tel,

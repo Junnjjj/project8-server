@@ -220,7 +220,7 @@ export class ProductRepository {
     }
   }
 
-  async getSaledProducts(userId) {
+  async getSaleProducts(userId) {
     try {
       const result = await this.productRepository
         .createQueryBuilder('product')
