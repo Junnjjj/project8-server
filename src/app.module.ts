@@ -18,6 +18,8 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { UserProfile } from './entity/userProfile.entity';
 import { CronModule } from './common/scheduler/cron.module';
 import { MemberModule } from './member/member.module';
+import { FavoriteModule } from './favorite/favorite.module';
+import { ProductFavorite } from './entity/productFavorite.entity';
 
 @Module({
   imports: [
@@ -29,7 +31,15 @@ import { MemberModule } from './member/member.module';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWD,
       database: process.env.DB_DATABASE,
-      entities: [User, Product, ProductFile, BiddingLog, UserProfile],
+      entities: [
+        User,
+        Product,
+        ProductFile,
+        BiddingLog,
+        UserProfile,
+        ProductFavorite,
+      ],
+      logging: ['warn', 'error'],
       synchronize: false,
     }),
     UserModule,
@@ -39,12 +49,13 @@ import { MemberModule } from './member/member.module';
     ScheduleModule.forRoot(),
     CronModule,
     MemberModule,
+    FavoriteModule,
   ],
   controllers: [AppController, UserController],
   providers: [AppService],
 })
 export class AppModule {
-  private readonly isDev: boolean = process.env.Mode === 'DEV' ? true : false;
+  private readonly isDev: boolean = process.env.MODE === 'DEV' ? true : false;
 
   configure(consumer: MiddlewareConsumer): any {
     consumer.apply(LoggerMiddleware).forRoutes('*');

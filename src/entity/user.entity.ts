@@ -11,6 +11,7 @@ import { Exclude } from 'class-transformer';
 import { BiddingLog } from './biddingLog.entity';
 import { Product } from './product.entity';
 import { UserProfile } from './userProfile.entity';
+import { ProductFavorite } from './productFavorite.entity';
 
 @Entity()
 export class User {
@@ -44,4 +45,7 @@ export class User {
 
   @OneToMany(() => BiddingLog, (biddingLog) => biddingLog.user)
   biddingLogs: BiddingLog[];
+
+  @OneToMany(() => ProductFavorite, (productFavorite) => productFavorite.user)
+  productFavorites: ProductFavorite[];
 }
