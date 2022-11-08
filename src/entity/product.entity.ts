@@ -58,6 +58,9 @@ export class Product {
   @Column({ nullable: true })
   owner: number;
 
+  @Column({ name: 'userId' })
+  userId: string;
+
   // product 판매자
   @ManyToOne(() => User, (user) => user.products)
   @JoinColumn({ name: 'userId' })
