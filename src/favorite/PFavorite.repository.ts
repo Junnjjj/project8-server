@@ -45,7 +45,10 @@ export class PFavoriteRepository {
         .andWhere('userId = :userId', { userId: userId })
         .execute();
 
-      const response = { message: 'delete favorite success', code: '200' };
+      const response = {
+        message: '관심 목록에서 삭제되었습니다.',
+        code: '200',
+      };
       return response;
     } catch (error) {
       throw new HttpException(error, 400);

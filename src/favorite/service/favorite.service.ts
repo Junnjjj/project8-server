@@ -21,7 +21,7 @@ export class FavoriteService {
     if (myProduct) {
       throw new HttpException(
         '자기 자신 물품은 관심목록에 넣을 수 없습니다.',
-        401,
+        400,
       );
     }
 

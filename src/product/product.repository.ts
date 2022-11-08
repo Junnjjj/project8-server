@@ -99,7 +99,20 @@ export class ProductRepository {
         .groupBy('product.id')
         .getRawOne();
 
+      const favoriteInfo = await this.productRepository
+        .createQueryBuilder('product')
+        .leftJoinAndSelect(
+          'product_favorite',
+          'productFavorite',
+          'productFavorite.productId = product.id',
+        )
+        .where({ id: productId })
+        .select('COUNT(productFavorite.id) AS count')
+        .groupBy('product.id')
+        .getRawOne();
+
       product['biddingCount'] = productBiddingInfo['biddingCount'];
+      product['favoriteCount'] = favoriteInfo['count'];
 
       return product;
     } catch (error) {
