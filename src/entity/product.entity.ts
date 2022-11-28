@@ -10,6 +10,7 @@ import {
 import { ProductFile } from './productFile.entity';
 import { BiddingLog } from './biddingLog.entity';
 import { User } from './user.entity';
+import { ProductFavorite } from './productFavorite.entity';
 
 @Entity()
 export class Product {
@@ -57,6 +58,9 @@ export class Product {
   @Column({ nullable: true })
   owner: number;
 
+  @Column({ name: 'userId' })
+  userId: string;
+
   // product 판매자
   @ManyToOne(() => User, (user) => user.products)
   @JoinColumn({ name: 'userId' })
@@ -71,4 +75,13 @@ export class Product {
     cascade: true,
   })
   biddingLogs: BiddingLog[];
+
+  @OneToMany(
+    () => ProductFavorite,
+    (productFavorite) => productFavorite.product,
+    {
+      cascade: true,
+    },
+  )
+  productFavorites: ProductFavorite[];
 }

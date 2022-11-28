@@ -45,7 +45,7 @@ export class MemberService {
 
   // 판매 중인 물건
   async getOnSaleProductLists(user) {
-    const userId = user.id;
+    const userId = typeof user === 'string' ? user : user.id;
 
     const productLists = await this.productRepository.getProductOnSale(userId);
 

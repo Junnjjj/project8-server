@@ -7,7 +7,6 @@ import * as bcrypt from 'bcrypt';
 import { UsersRequestDto } from '../dto/user.request.dto';
 import { UserRepository } from '../user.repository';
 import { UserProfileRepository } from '../userProfile.repository';
-import { BiddingLogRepository } from '../../bid/biddingLog.repository';
 
 @Injectable()
 export class UserService {
@@ -21,8 +20,11 @@ export class UserService {
     if (!isUserExist) {
       throw new HttpException('해당하는 유저가 존재하지 않습니다..', 401);
     }
+    const user = await this.userRepository.findUserByIdWithoutPassword(id);
 
-    const result = await this.userRepository.findUserProductData(id);
+    // const transactionCount;
+
+    return await this.userRepository.findUserByIdWithoutPassword(id);
   }
 
   async signUp(body: UsersRequestDto) {

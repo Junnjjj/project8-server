@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../../auth/jwt/jwt.guard';
 import { CurrentUser } from '../../common/decorators/user.decorator';
 import { MemberService } from '../service/member.service';
@@ -19,6 +19,12 @@ export class MemberController {
   @UseGuards(JwtAuthGuard)
   getOnSaleProducts(@CurrentUser() user) {
     return this.memberService.getOnSaleProductLists(user);
+  }
+
+  // 판매중인 물건 - useGuard 없이
+  @Get('/onSaleProducts/:id')
+  getOpenOnSaleProducts(@Param('id') id: number) {
+    return this.memberService.getOnSaleProductLists(id);
   }
 
   // 입찰 성공한 물건(구매한 물건)
