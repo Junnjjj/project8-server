@@ -14,6 +14,15 @@ export class UserProfile {
   @Column()
   photoImg: string;
 
+  // + 별점
+  @Column({ default: 0 })
+  starCount: number;
+
+  // + 재거래 희망률
+  @Column({ default: 50 })
+  reTransactionRate: number;
+
+  // + 거래횟수 => query 문
   @Column({ default: 0 })
   onSaleProduct: number;
 

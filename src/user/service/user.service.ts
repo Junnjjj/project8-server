@@ -20,6 +20,10 @@ export class UserService {
     if (!isUserExist) {
       throw new HttpException('해당하는 유저가 존재하지 않습니다..', 401);
     }
+    const user = await this.userRepository.findUserByIdWithoutPassword(id);
+
+    // const transactionCount;
+
     return await this.userRepository.findUserByIdWithoutPassword(id);
   }
 

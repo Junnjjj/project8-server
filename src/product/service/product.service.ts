@@ -70,7 +70,7 @@ export class ProductService {
         endHour,
         bidUnit,
         endTime: endDateTime,
-        user: userId,
+        userId: userId,
       });
 
       // 2. 이미지 파일들 외래키 설정
