@@ -16,8 +16,8 @@ export class MemberService {
     // 1. BiddingLog 에서 Bidding Id 중복 제거한 id 리스트 가져오기
     const Logs = await this.biddingLogRepository.getBiddingProducts(userId);
 
-    if (!Logs) {
-      return;
+    if (Array.isArray(Logs) && Logs.length === 0) {
+      return Logs;
     }
     const productIds = [];
     const price = [];

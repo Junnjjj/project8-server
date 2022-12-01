@@ -24,10 +24,11 @@ export class ProductService {
     return productList;
   }
 
-  async showProductsByPage(pageNum: number, limitNum: number) {
+  async showProductsByPage(pageNum: number, limitNum: number, type: number) {
     const productList = await this.productRepository.findProductsByPage(
       pageNum,
       limitNum,
+      type,
     );
     return productList;
   }

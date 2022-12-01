@@ -8,8 +8,17 @@ import * as Process from 'process';
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(private readonly userRepository: UserRepository) {
+    // super({
+    //   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+    //   secretOrKey: process.env.JWT_ACCESS_TOKEN_SECRET,
+    //   ignoreExpiration: false,
+    // });
     super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      jwtFromRequest: ExtractJwt.fromExtractors([
+        (request) => {
+          return request?.cookies?.ajt;
+        },
+      ]),
       secretOrKey: process.env.JWT_ACCESS_TOKEN_SECRET,
       ignoreExpiration: false,
     });
@@ -21,7 +30,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     );
 
     if (user) {
-      return user; //request.use
+      return user; //request.user
     } else {
       throw new UnauthorizedException('접근 오류');
     }
