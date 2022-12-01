@@ -40,9 +40,11 @@ export class ProductRepository {
   async findProductsByPage(
     pageNum: number,
     limitNum: number,
+    type: number,
   ): Promise<Product[] | null> {
     const limit = limitNum; //페이지 당 표시할 프로덕트 수
     const skip = (pageNum - 1) * limit; //스킵할 프로덕트 수
+    const aType = Number(type) === 0 ? [1, 2, 3] : type;
     try {
       const productList = await this.productRepository
         .createQueryBuilder('product')
@@ -63,6 +65,7 @@ export class ProductRepository {
         ])
         .addSelect('COUNT(biddingLog.id) AS biddingCount')
         .where({ active: true })
+        .andWhere('product.eType IN (:aType)', { aType: aType })
         .groupBy('product.id')
         .limit(limit)
         .offset(skip)

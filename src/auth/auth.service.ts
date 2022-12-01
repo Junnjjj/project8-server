@@ -36,7 +36,6 @@ export class AuthService {
     const RefreshToken = this.getCookieWithJwtRefreshToken(user.id);
 
     return {
-      // token: this.jwtService.sign(payload),
       AccessToken,
       RefreshToken,
     };
@@ -50,7 +49,16 @@ export class AuthService {
       expiresIn: `${process.env.JWT_ACCESS_TOKEN_EXPIRATION_TIME}s`,
     });
 
-    return token;
+    // return token;
+    return {
+      token: token,
+      options: {
+        domain: 'localhost',
+        path: '/',
+        httpOnly: true,
+        maxAge: Number(process.env.JWT_ACCESS_TOKEN_EXPIRATION_TIME) * 1000,
+      },
+    };
   }
 
   // Refresh Token - 7일
@@ -80,6 +88,13 @@ export class AuthService {
   }
 
   deleteJwtCookie(res) {
+    res.cookie('ajt', '', {
+      domain: 'localhost',
+      path: '/',
+      httpOnly: true,
+      maxAge: 0,
+    });
+
     res.cookie('refreshToken', '', {
       domain: 'localhost',
       path: '/',

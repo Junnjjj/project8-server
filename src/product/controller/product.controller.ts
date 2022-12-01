@@ -4,6 +4,7 @@ import {
   Get,
   Param,
   Post,
+  Query,
   UploadedFiles,
   UseGuards,
   UseInterceptors,
@@ -29,12 +30,16 @@ export class ProductController {
     return this.productsService.showAllProducts();
   }
 
-  @Get('page:id/limit:num')
+  // @Get('page:id/limit:num')
+  @Get('/findByFilter/?')
   async showProductsByPage(
-    @Param('id') id: number,
-    @Param('num') num: number,
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+    @Query('type') type: number,
+    // @Param('id') id: number,
+    // @Param('num') num: number,
   ): Promise<Product[]> {
-    return this.productsService.showProductsByPage(id, num);
+    return this.productsService.showProductsByPage(page, limit, type);
   }
 
   @Get(':id')
