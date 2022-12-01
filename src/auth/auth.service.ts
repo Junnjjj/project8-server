@@ -49,11 +49,11 @@ export class AuthService {
       expiresIn: `${process.env.JWT_ACCESS_TOKEN_EXPIRATION_TIME}s`,
     });
 
-    // return token;
     return {
       token: token,
       options: {
-        domain: 'localhost',
+        domain:
+          process.env.MODE === 'ENV' ? 'localhost' : process.env.DOMAIN_URL,
         path: '/',
         httpOnly: true,
         maxAge: Number(process.env.JWT_ACCESS_TOKEN_EXPIRATION_TIME) * 1000,
@@ -72,7 +72,8 @@ export class AuthService {
     return {
       token: token,
       options: {
-        domain: 'localhost',
+        domain:
+          process.env.MODE === 'ENV' ? 'localhost' : process.env.DOMAIN_URL,
         path: '/',
         httpOnly: true,
         maxAge: Number(process.env.JWT_REFRESH_TOKEN_EXPIRATION_TIME) * 1000,
@@ -89,14 +90,14 @@ export class AuthService {
 
   deleteJwtCookie(res) {
     res.cookie('ajt', '', {
-      domain: 'localhost',
+      domain: process.env.MODE === 'ENV' ? 'localhost' : process.env.DOMAIN_URL,
       path: '/',
       httpOnly: true,
       maxAge: 0,
     });
 
     res.cookie('refreshToken', '', {
-      domain: 'localhost',
+      domain: process.env.MODE === 'ENV' ? 'localhost' : process.env.DOMAIN_URL,
       path: '/',
       httpOnly: true,
       maxAge: 0,
