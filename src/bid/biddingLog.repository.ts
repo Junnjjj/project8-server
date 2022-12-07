@@ -75,6 +75,22 @@ export class BiddingLogRepository {
     }
   }
 
+  async prevBiddingUserId({ productId }) {
+    try {
+      const biddingLog = await this.biddingLogRepository
+        .createQueryBuilder('biddingLog')
+        .leftJoinAndSelect('biddingLog.user', 'user')
+        .where('productId = :productId', { productId: productId })
+        .orderBy({ 'biddingLog.createdDate': 'DESC' })
+        .getOne();
+
+      if (!biddingLog) return false;
+      return biddingLog.user.id;
+    } catch (error) {
+      throw new HttpException('db error', 400);
+    }
+  }
+
   async getWinningBid(productId) {
     try {
       const biddingLog = await this.biddingLogRepository

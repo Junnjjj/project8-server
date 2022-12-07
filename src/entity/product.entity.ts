@@ -11,6 +11,7 @@ import { ProductFile } from './productFile.entity';
 import { BiddingLog } from './biddingLog.entity';
 import { User } from './user.entity';
 import { ProductFavorite } from './productFavorite.entity';
+import { Alarm } from './alarm.entity';
 
 @Entity()
 export class Product {
@@ -84,4 +85,7 @@ export class Product {
     },
   )
   productFavorites: ProductFavorite[];
+
+  @OneToMany(() => Alarm, (alarm) => alarm.product)
+  alarms: Alarm[];
 }
