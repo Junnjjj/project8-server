@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Alarm } from '../entity/alarm.entity';
 import { Repository } from 'typeorm';
 import * as http from 'http';
+import { BiddingLog } from '../entity/biddingLog.entity';
 
 @Injectable()
 export class AlarmRepository {
@@ -33,6 +34,15 @@ export class AlarmRepository {
     } catch (error) {
       throw new HttpException(error, 400);
     }
+  }
+
+  async createAlarmWithQueryRunner({ queryRunner, productId, userId, type }) {
+    const result = await queryRunner.manager.save(Alarm, {
+      userId: userId,
+      type: type,
+      productId: productId,
+    });
+    return result;
   }
 
   async getUserAlarm(userId) {
