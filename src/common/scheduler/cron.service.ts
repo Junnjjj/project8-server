@@ -6,6 +6,7 @@ import { UserProfileRepository } from '../../user/userProfile.repository';
 import { DataSource } from 'typeorm';
 import { UserRepository } from '../../user/user.repository';
 import { BiddingLogRepository } from '../../bid/biddingLog.repository';
+import { AlarmRepository } from '../../alarm/alarm.repository';
 
 @Injectable()
 export class CronService {
@@ -15,6 +16,7 @@ export class CronService {
     private readonly biddingLogRepository: BiddingLogRepository,
     private readonly userRepository: UserRepository,
     private readonly userProfileRepository: UserProfileRepository,
+    private readonly alarmRepository: AlarmRepository,
     private dataSource: DataSource,
   ) {}
 
@@ -75,6 +77,29 @@ export class CronService {
           await this.biddingLogRepository.updateBiddingSuccess({
             queryRunner,
             logId,
+          });
+
+          // 5-1. owner 에게 입찰 성공 알람, 판매자에게 판매 성공 알람
+          await this.alarmRepository.createAlarmWithQueryRunner({
+            queryRunner,
+            productId: pid,
+            userId: ownerId,
+            type: 1,
+          });
+
+          await this.alarmRepository.createAlarmWithQueryRunner({
+            queryRunner,
+            productId: pid,
+            userId: userId,
+            type: 2,
+          });
+        } else {
+          // 6. 입찰이 실패했다면 판매자에게 판매 실패 알람
+          await this.alarmRepository.createAlarmWithQueryRunner({
+            queryRunner,
+            productId: pid,
+            userId: userId,
+            type: 3,
           });
         }
 

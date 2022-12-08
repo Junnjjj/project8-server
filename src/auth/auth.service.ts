@@ -96,7 +96,7 @@ export class AuthService {
       maxAge: 0,
     });
 
-    res.cookie('refreshToken', '', {
+    res.cookie('rjt', '', {
       domain: process.env.MODE === 'DEV' ? 'localhost' : process.env.DOMAIN_URL,
       path: '/',
       httpOnly: true,

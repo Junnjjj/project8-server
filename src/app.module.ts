@@ -20,6 +20,8 @@ import { CronModule } from './common/scheduler/cron.module';
 import { MemberModule } from './member/member.module';
 import { FavoriteModule } from './favorite/favorite.module';
 import { ProductFavorite } from './entity/productFavorite.entity';
+import { AlarmModule } from './alarm/alarm.module';
+import { Alarm } from './entity/alarm.entity';
 
 @Module({
   imports: [
@@ -38,6 +40,7 @@ import { ProductFavorite } from './entity/productFavorite.entity';
         BiddingLog,
         UserProfile,
         ProductFavorite,
+        Alarm,
       ],
       logging: ['warn', 'error'],
       synchronize: false,
@@ -50,6 +53,7 @@ import { ProductFavorite } from './entity/productFavorite.entity';
     CronModule,
     MemberModule,
     FavoriteModule,
+    AlarmModule,
   ],
   controllers: [AppController, UserController],
   providers: [AppService],

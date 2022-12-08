@@ -30,14 +30,11 @@ export class ProductController {
     return this.productsService.showAllProducts();
   }
 
-  // @Get('page:id/limit:num')
   @Get('/findByFilter/?')
   async showProductsByPage(
     @Query('page') page: number,
     @Query('limit') limit: number,
     @Query('type') type: number,
-    // @Param('id') id: number,
-    // @Param('num') num: number,
   ): Promise<Product[]> {
     return this.productsService.showProductsByPage(page, limit, type);
   }

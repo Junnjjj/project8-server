@@ -51,9 +51,9 @@ export class UserController {
     );
 
     // Set-Cookie 에 AccessToken, Refresh Token 저장
-    res.set({ 'Access-Control-Allow-Credentials': true });
+    // res.header('Access-Control-Allow-Headers', process.env.FRONT_URL);
     res.cookie('ajt', AccessToken.token, AccessToken.options);
-    res.cookie('refreshToken', RefreshToken.token, RefreshToken.options);
+    res.cookie('rjt', RefreshToken.token, RefreshToken.options);
 
     return res.send({
       message: 'loginSuccess',

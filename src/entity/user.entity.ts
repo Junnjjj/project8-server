@@ -12,6 +12,7 @@ import { BiddingLog } from './biddingLog.entity';
 import { Product } from './product.entity';
 import { UserProfile } from './userProfile.entity';
 import { ProductFavorite } from './productFavorite.entity';
+import { Alarm } from './alarm.entity';
 
 @Entity()
 export class User {
@@ -48,4 +49,7 @@ export class User {
 
   @OneToMany(() => ProductFavorite, (productFavorite) => productFavorite.user)
   productFavorites: ProductFavorite[];
+
+  @OneToMany(() => Alarm, (alarm) => alarm.user)
+  alarms: Alarm[];
 }
