@@ -41,7 +41,7 @@ export class AlarmService {
       userId,
       id,
     });
-    if (isMyAlarm) {
+    if (!isMyAlarm) {
       throw new HttpException('알람의 사용자가 아닙니다.', 401);
     }
 

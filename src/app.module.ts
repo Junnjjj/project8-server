@@ -2,7 +2,6 @@ import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserController } from './user/controller/user.controller';
-import { UserService } from './user/service/user.service';
 import { LoggerMiddleware } from './common/middlewares/logger.middleware';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
@@ -44,6 +43,8 @@ import { Alarm } from './entity/alarm.entity';
       ],
       logging: ['warn', 'error'],
       synchronize: false,
+      migrations: [Alarm],
+      migrationsTableName: 'custom_migration_table',
     }),
     UserModule,
     AuthModule,

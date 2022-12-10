@@ -86,11 +86,12 @@ export class AlarmRepository {
     try {
       await this.alarmRepository
         .createQueryBuilder('alarm')
-        .delete()
+        .softDelete()
         .from(Alarm)
         .where('id = :id', { id: id })
         .execute();
     } catch (error) {
+      console.log(error);
       throw new HttpException(error, 400);
     }
   }

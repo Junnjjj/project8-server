@@ -75,6 +75,15 @@ export class BidService {
       });
     }
 
+    // (추가 - alarm) => product User에게 입찰된 사실 알리기.
+    const productInfo = await this.productRepository.findProductPId(productId);
+    const productUserId = productInfo.userId;
+    await this.alarmRepository.createAlarm({
+      productId,
+      userId: productUserId,
+      type: 4,
+    });
+
     // 트랙잭션 형성
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();

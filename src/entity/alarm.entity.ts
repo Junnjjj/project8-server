@@ -1,6 +1,7 @@
 import {
   Column,
   CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   Index,
   JoinColumn,
@@ -23,6 +24,9 @@ export class Alarm {
 
   @Column({ name: 'productId' })
   productId: string;
+
+  @DeleteDateColumn()
+  deleteAt: Date;
 
   @Column({ name: 'userId' })
   @Index()
