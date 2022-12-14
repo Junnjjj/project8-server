@@ -22,8 +22,60 @@ import { ProductFavorite } from './entity/productFavorite.entity';
 import { AlarmModule } from './alarm/alarm.module';
 import { Alarm } from './entity/alarm.entity';
 
+import { AdminModule } from '@adminjs/nestjs';
+import * as AdminJSTypeorm from '@adminjs/typeorm';
+import AdminJS from 'adminjs';
+import { UserAuthority } from './entity/userAuthority.entity';
+import { News } from './entity/news.entity';
+import { NewsModule } from './news/news.module';
+
+const DEFAULT_ADMIN = {
+  email: 'admin@example.com',
+  password: '123123',
+};
+
+const authenticate = async (email: string, password: string) => {
+  if (email === DEFAULT_ADMIN.email && password === DEFAULT_ADMIN.password) {
+    return Promise.resolve(DEFAULT_ADMIN);
+  }
+  return null;
+};
+
+AdminJS.registerAdapter({
+  Resource: AdminJSTypeorm.Resource,
+  Database: AdminJSTypeorm.Database,
+});
+
 @Module({
   imports: [
+    AdminModule.createAdminAsync({
+      useFactory: () => ({
+        adminJsOptions: {
+          rootPath: '/admin',
+          resources: [
+            User,
+            Product,
+            ProductFile,
+            BiddingLog,
+            UserProfile,
+            ProductFavorite,
+            Alarm,
+            UserAuthority,
+            News,
+          ],
+        },
+        auth: {
+          authenticate,
+          cookieName: 'adminjs',
+          cookiePassword: 'secret',
+        },
+        sessionOptions: {
+          resave: true,
+          saveUninitialized: true,
+          secret: 'secret',
+        },
+      }),
+    }),
     ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'mysql',
@@ -40,6 +92,8 @@ import { Alarm } from './entity/alarm.entity';
         UserProfile,
         ProductFavorite,
         Alarm,
+        UserAuthority,
+        News,
       ],
       logging: ['warn', 'error'],
       synchronize: false,
@@ -55,6 +109,7 @@ import { Alarm } from './entity/alarm.entity';
     MemberModule,
     FavoriteModule,
     AlarmModule,
+    NewsModule,
   ],
   controllers: [AppController, UserController],
   providers: [AppService],

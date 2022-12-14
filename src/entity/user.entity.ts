@@ -6,6 +6,7 @@ import {
   OneToMany,
   JoinColumn,
   OneToOne,
+  BaseEntity,
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
 import { BiddingLog } from './biddingLog.entity';
@@ -13,9 +14,10 @@ import { Product } from './product.entity';
 import { UserProfile } from './userProfile.entity';
 import { ProductFavorite } from './productFavorite.entity';
 import { Alarm } from './alarm.entity';
+import { UserAuthority } from './userAuthority.entity';
 
 @Entity()
-export class User {
+export class User extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -52,4 +54,7 @@ export class User {
 
   @OneToMany(() => Alarm, (alarm) => alarm.user)
   alarms: Alarm[];
+
+  @OneToMany(() => UserAuthority, (userAuthority) => userAuthority.user)
+  authorities: UserAuthority[];
 }

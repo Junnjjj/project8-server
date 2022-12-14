@@ -6,6 +6,7 @@ import {
   CreateDateColumn,
   ManyToOne,
   JoinColumn,
+  BaseEntity,
 } from 'typeorm';
 import { ProductFile } from './productFile.entity';
 import { BiddingLog } from './biddingLog.entity';
@@ -14,7 +15,7 @@ import { ProductFavorite } from './productFavorite.entity';
 import { Alarm } from './alarm.entity';
 
 @Entity()
-export class Product {
+export class Product extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -60,7 +61,7 @@ export class Product {
   owner: number;
 
   @Column({ name: 'userId' })
-  userId: string;
+  userId: number;
 
   // product 판매자
   @ManyToOne(() => User, (user) => user.products)
