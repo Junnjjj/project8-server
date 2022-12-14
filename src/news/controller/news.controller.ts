@@ -1,4 +1,12 @@
-import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Param,
+  Post,
+  Req,
+  UploadedFiles,
+  UseGuards,
+} from '@nestjs/common';
 import { NewsService } from '../service/news.service';
 import { JwtAuthGuard } from '../../auth/jwt/jwt.guard';
 import { RolesGuard } from '../../auth/role/roles.guard';
@@ -18,5 +26,15 @@ export class NewsController {
     );
 
     return this.newsService.createNews(body, role_admin[0]);
+  }
+
+  @Post('upload/:imgName')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(RoleType.ADMIN)
+  uploadNewsImg(
+    @Param('imgName') imgName: string,
+    @UploadedFiles() files: Array<Express.Multer.File>,
+  ) {
+    return this.newsService.saveNewsImg(files[0], imgName);
   }
 }

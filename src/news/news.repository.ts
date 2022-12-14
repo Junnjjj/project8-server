@@ -2,6 +2,7 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { News } from '../entity/news.entity';
 import { Repository } from 'typeorm';
+import { ProductFile } from '../entity/productFile.entity';
 
 @Injectable()
 export class NewsRepository {

@@ -5,10 +5,12 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { UserAuthority } from './userAuthority.entity';
+import { NewsFile } from './newsFile.entity';
 
 @Entity()
 export class News extends BaseEntity {
@@ -46,8 +48,8 @@ export class News extends BaseEntity {
   @JoinColumn({ name: 'authorityId' })
   userAuthority: UserAuthority;
 
-  // @OneToMany(()=>NewsFile, (newsFile)=> newsFile.news , {
-  //   casecade: true,
-  // })
-  // news: NewsFile[]
+  @OneToMany(() => NewsFile, (newsFile) => newsFile.news, {
+    cascade: true,
+  })
+  newsFiles: NewsFile[];
 }

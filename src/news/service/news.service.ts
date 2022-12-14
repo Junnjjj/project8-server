@@ -1,9 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { NewsRepository } from '../news.repository';
+import { NewsFileRepository } from '../newsFile.repository';
 
 @Injectable()
 export class NewsService {
-  constructor(private readonly newsRepository: NewsRepository) {}
+  constructor(
+    private readonly newsRepository: NewsRepository,
+    private readonly newFileRepository: NewsFileRepository,
+  ) {}
 
   async createNews(body, role) {
     const authorityId = role.id;
@@ -20,5 +24,9 @@ export class NewsService {
     });
 
     return newNews;
+  }
+
+  async saveNewsImg(file, imgName) {
+    return await this.newFileRepository.saveNewsImg(file, imgName);
   }
 }
