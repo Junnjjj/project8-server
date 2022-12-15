@@ -13,6 +13,7 @@ import { Product } from './product.entity';
 import { UserProfile } from './userProfile.entity';
 import { ProductFavorite } from './productFavorite.entity';
 import { Alarm } from './alarm.entity';
+import { Qna } from './qna.entity';
 
 @Entity()
 export class User {
@@ -52,4 +53,7 @@ export class User {
 
   @OneToMany(() => Alarm, (alarm) => alarm.user)
   alarms: Alarm[];
+
+  @OneToMany(() => Qna, (qna) => qna.user)
+  qnas: Qna[];
 }
