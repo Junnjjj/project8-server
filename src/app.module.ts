@@ -28,6 +28,7 @@ import AdminJS from 'adminjs';
 import { UserAuthority } from './entity/userAuthority.entity';
 import { News } from './entity/news.entity';
 import { NewsModule } from './news/news.module';
+import { NewsFile } from './entity/newsFile.entity';
 
 const DEFAULT_ADMIN = {
   email: 'admin@example.com',
@@ -62,6 +63,7 @@ AdminJS.registerAdapter({
             Alarm,
             UserAuthority,
             News,
+            NewsFile,
           ],
         },
         auth: {
@@ -94,6 +96,7 @@ AdminJS.registerAdapter({
         Alarm,
         UserAuthority,
         News,
+        NewsFile,
       ],
       logging: ['warn', 'error'],
       synchronize: false,

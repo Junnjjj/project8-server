@@ -1,8 +1,9 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { News } from '../entity/news.entity';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { ProductFile } from '../entity/productFile.entity';
+import { NewsFile } from '../entity/newsFile.entity';
 
 @Injectable()
 export class NewsRepository {
@@ -10,29 +11,40 @@ export class NewsRepository {
     @InjectRepository(News) private newsRepository: Repository<News>,
   ) {}
 
-  async createNews({
-    authorityId,
-    title,
-    subTitle,
-    description,
-    openDate,
-    price,
-  }) {
+  async findNewsById(newsId) {
     try {
-      const result = this.newsRepository
+      const news = await this.newsRepository
         .createQueryBuilder('news')
-        .insert()
-        .into(News)
-        .values({
-          title: title,
-          subTitle: subTitle,
-          description: description,
-          openDate: openDate,
-          price: price,
-          authorityId: authorityId,
-        })
-        .execute();
-      return result;
+        .leftJoinAndSelect('news.newsFiles', 'newsFile')
+        .where({ id: newsId })
+        .getOne();
+      return news;
+    } catch (error) {
+      throw new HttpException(error, 400);
+    }
+  }
+
+  async createNews(queryRunner, news) {
+    return await queryRunner.manager.save(News, news);
+  }
+
+  async findNewsByPage(page, limit) {
+    const skip = (page - 1) * limit; // 스킵할 news 수
+    try {
+      const newsList = await this.newsRepository
+        .createQueryBuilder('news')
+        .select([
+          'news.id as id',
+          'news.title as title',
+          'news.subTitle as subTitle',
+          'news.openDate as openDate',
+          'news.price as price',
+        ])
+        .limit(limit)
+        .offset(skip)
+        .getRawMany();
+
+      return newsList;
     } catch (error) {
       throw new HttpException(error, 400);
     }
