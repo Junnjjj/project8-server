@@ -78,4 +78,8 @@ export class NewsService {
   async saveNewsImg(file, imgName) {
     return await this.newsFileRepository.saveNewsImg(file, imgName);
   }
+
+  async getNewsLength() {
+    return await this.newsRepository.getNewsLength();
+  }
 }

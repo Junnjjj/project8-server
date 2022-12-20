@@ -11,6 +11,7 @@ import {
 } from 'typeorm';
 import { UserAuthority } from './userAuthority.entity';
 import { NewsFile } from './newsFile.entity';
+import { NewsComment } from './newsComment.entity';
 
 @Entity()
 export class News extends BaseEntity {
@@ -52,4 +53,7 @@ export class News extends BaseEntity {
     cascade: true,
   })
   newsFiles: NewsFile[];
+
+  @OneToMany(() => NewsComment, (newsComment) => newsComment.news)
+  newsComments: NewsComment[];
 }

@@ -2,12 +2,15 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { NewsFile } from '../entity/newsFile.entity';
 import { Repository } from 'typeorm';
+import { ProductFile } from '../entity/productFile.entity';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class NewsFileRepository {
   constructor(
     @InjectRepository(NewsFile)
     private newsFileRepository: Repository<NewsFile>,
+    private readonly configService: ConfigService,
   ) {}
 
   async saveNewsImg(file, imgName) {
@@ -23,6 +26,20 @@ export class NewsFileRepository {
       newImgFile.fileName = file.filename;
       await this.newsFileRepository.save(newImgFile);
       return file.filename;
+    } catch (error) {
+      throw new HttpException('db error', 400);
+    }
+  }
+
+  async saveNewsImgWithGCP(fileName, imgName) {
+    try {
+      const url = this.configService.get('GCP_URL');
+      const newImgFile = new NewsFile();
+      newImgFile.imgURL = `${url}/news/${fileName}`;
+      newImgFile.originalName = imgName;
+      newImgFile.fileName = fileName;
+      await this.newsFileRepository.save(newImgFile);
+      return fileName;
     } catch (error) {
       throw new HttpException('db error', 400);
     }

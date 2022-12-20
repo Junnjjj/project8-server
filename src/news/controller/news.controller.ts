@@ -53,6 +53,11 @@ export class NewsController {
     return this.newsService.showNewsByPage(page, limit);
   }
 
+  @Get('/length')
+  getNewsLength() {
+    return this.newsService.getNewsLength();
+  }
+
   @Get(':id')
   showNews(@Param('id') id: number): Promise<News> {
     return this.newsService.showOneNews(id);

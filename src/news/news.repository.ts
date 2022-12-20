@@ -49,4 +49,17 @@ export class NewsRepository {
       throw new HttpException(error, 400);
     }
   }
+
+  async getNewsLength() {
+    try {
+      const result = await this.newsRepository
+        .createQueryBuilder('news')
+        .select('count(*) as length')
+        .getRawOne();
+
+      return result;
+    } catch (error) {
+      throw new HttpException(error, 400);
+    }
+  }
 }

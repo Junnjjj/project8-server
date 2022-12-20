@@ -29,6 +29,8 @@ import { UserAuthority } from './entity/userAuthority.entity';
 import { News } from './entity/news.entity';
 import { NewsModule } from './news/news.module';
 import { NewsFile } from './entity/newsFile.entity';
+import { StorageModule } from './storage/storage.module';
+import { MediaModule } from './media/media.module';
 
 const DEFAULT_ADMIN = {
   email: 'admin@example.com',
@@ -78,7 +80,7 @@ AdminJS.registerAdapter({
         },
       }),
     }),
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: process.env.DB_HOST,
@@ -113,6 +115,8 @@ AdminJS.registerAdapter({
     FavoriteModule,
     AlarmModule,
     NewsModule,
+    StorageModule,
+    MediaModule,
   ],
   controllers: [AppController, UserController],
   providers: [AppService],

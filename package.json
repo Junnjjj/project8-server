@@ -25,6 +25,7 @@
     "@adminjs/express": "^5.0.1",
     "@adminjs/nestjs": "^5.0.1",
     "@adminjs/typeorm": "^4.0.0",
+    "@google-cloud/storage": "^6.8.0",
     "@nestjs/common": "^8.0.0",
     "@nestjs/config": "^2.2.0",
     "@nestjs/core": "^8.0.0",
