@@ -34,8 +34,8 @@ export class QnaService {
       const newQna = await this.qnaRepository.createQna(queryRunner, {
         reference: qid,
         content,
-        product: productId,
-        user: userId,
+        productId: productId,
+        userId: userId,
       });
 
       await queryRunner.commitTransaction();
@@ -48,5 +48,32 @@ export class QnaService {
     } finally {
       await queryRunner.release();
     }
+  }
+
+  async updateQna({ user, id }, body) {
+    const { content } = body;
+    const userId = user.id;
+    const isMyQna = await this.qnaRepository.checkQnaOwner({
+      userId,
+      id,
+    });
+    if (!isMyQna) {
+      throw new HttpException('Qna의 사용자가 아닙니다.', 401);
+    }
+
+    return await this.qnaRepository.updateQna(id, content);
+  }
+
+  async deleteQna({ user, id }) {
+    const userId = user.id;
+    const isMyQna = await this.qnaRepository.checkQnaOwner({
+      userId,
+      id,
+    });
+    if (!isMyQna) {
+      throw new HttpException('Qna의 사용자가 아닙니다.', 401);
+    }
+
+    return await this.qnaRepository.deleteQna(id);
   }
 }

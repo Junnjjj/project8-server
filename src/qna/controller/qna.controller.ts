@@ -1,10 +1,11 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
-  Res,
+  Patch,
   UseGuards,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../../auth/jwt/jwt.guard';
@@ -44,5 +45,21 @@ export class QnaController {
   ) {
     //Post 요청에 qid가 오면 answer 생성
     return this.qnaService.createQna(body, user, pid, qid);
+  }
+
+  @Patch('/:qid')
+  @UseGuards(JwtAuthGuard)
+  updateQna(
+    @CurrentUser() user: User,
+    @Param('qid') id: number,
+    @Body() body: QnaRequestDto,
+  ) {
+    return this.qnaService.updateQna({ user, id }, body);
+  }
+
+  @Delete('/:qid')
+  @UseGuards(JwtAuthGuard)
+  deleteQna(@CurrentUser() user: User, @Param('qid') id: number) {
+    return this.qnaService.deleteQna({ user, id });
   }
 }

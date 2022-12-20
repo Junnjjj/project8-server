@@ -10,6 +10,18 @@ export class QnaRepository {
     private qnaRepository: Repository<Qna>,
   ) {}
 
+  async checkQnaOwner({ userId, id }) {
+    try {
+      const result = await this.qnaRepository
+        .createQueryBuilder('qna')
+        .where('id = :id', { id: id })
+        .getOne();
+      return result.userId === userId ? true : false;
+    } catch (error) {
+      throw new HttpException(error, 400);
+    }
+  }
+
   async findAllQnaByPid(productId): Promise<Qna[] | null> {
     try {
       const qnaList = await this.qnaRepository.find({
@@ -23,5 +35,33 @@ export class QnaRepository {
 
   async createQna(queryRunner, qna) {
     return await queryRunner.manager.save(Qna, qna);
+  }
+
+  async updateQna(id, newContent: string) {
+    try {
+      await this.qnaRepository
+        .createQueryBuilder('qna')
+        .update(Qna)
+        .set({
+          content: newContent,
+        })
+        .where('id = :id', { id: id })
+        .execute();
+    } catch (error) {
+      throw new HttpException(error, 400);
+    }
+  }
+
+  async deleteQna(id) {
+    try {
+      await this.qnaRepository
+        .createQueryBuilder('qna')
+        .softDelete()
+        .from(Qna)
+        .where('id = :id', { id: id })
+        .execute();
+    } catch (error) {
+      throw new HttpException('db error', 400);
+    }
   }
 }
