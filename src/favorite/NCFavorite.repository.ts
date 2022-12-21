@@ -14,8 +14,8 @@ export class NCFavoriteRepository {
     try {
       const favorites = await this.commentFavoriteRepository
         .createQueryBuilder('commentFavorite')
-        .where({ id: commentId })
-        .andWhere({ userId: userId })
+        .where('commentId = :commentId', { commentId: commentId })
+        .andWhere('userId = :userId', { userId: userId })
         .getOne();
 
       return favorites ? true : false;
@@ -29,8 +29,8 @@ export class NCFavoriteRepository {
       await this.commentFavoriteRepository
         .createQueryBuilder('commentFavorite')
         .delete()
-        .where({ id: commentId })
-        .andWhere({ userId: userId })
+        .where('commentId = :commentId', { commentId: commentId })
+        .andWhere('userId = :userId', { userId: userId })
         .execute();
 
       const response = {

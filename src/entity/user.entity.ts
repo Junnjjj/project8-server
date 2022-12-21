@@ -17,6 +17,7 @@ import { Alarm } from './alarm.entity';
 import { UserAuthority } from './userAuthority.entity';
 import { NewsComment } from './newsComment.entity';
 import { NewsCommentFavorite } from './newsCommentFavorite.entity';
+import { NewsCommentReport } from './newsCommentReport.entity';
 
 @Entity()
 export class User extends BaseEntity {
@@ -68,4 +69,10 @@ export class User extends BaseEntity {
     (newsCommentFavorite) => newsCommentFavorite.user,
   )
   newsCommentFavorites: NewsCommentFavorite[];
+
+  @OneToMany(
+    () => NewsCommentReport,
+    (newsCommentReport) => newsCommentReport.user,
+  )
+  newsCommentReports: NewsCommentReport[];
 }

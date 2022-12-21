@@ -1,7 +1,6 @@
 import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UserController } from './user/controller/user.controller';
 import { LoggerMiddleware } from './common/middlewares/logger.middleware';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
@@ -32,6 +31,9 @@ import { NewsFile } from './entity/newsFile.entity';
 import { StorageModule } from './storage/storage.module';
 import { MediaModule } from './media/media.module';
 import { NewsComment } from './entity/newsComment.entity';
+import { NewsCommentFavorite } from './entity/newsCommentFavorite.entity';
+import { NewsCommentReport } from './entity/newsCommentReport.entity';
+import { ReportModule } from './report/report.module';
 
 const DEFAULT_ADMIN = {
   email: 'admin@example.com',
@@ -68,6 +70,8 @@ AdminJS.registerAdapter({
             News,
             NewsFile,
             NewsComment,
+            NewsCommentFavorite,
+            NewsCommentReport,
           ],
         },
         auth: {
@@ -102,6 +106,8 @@ AdminJS.registerAdapter({
         News,
         NewsFile,
         NewsComment,
+        NewsCommentFavorite,
+        NewsCommentReport,
       ],
       logging: ['warn', 'error'],
       synchronize: false,
@@ -120,8 +126,9 @@ AdminJS.registerAdapter({
     NewsModule,
     StorageModule,
     MediaModule,
+    ReportModule,
   ],
-  controllers: [AppController, UserController],
+  controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {

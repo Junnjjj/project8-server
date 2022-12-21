@@ -11,7 +11,7 @@ export class NewsCommentFavorite extends BaseEntity {
     () => NewsComment,
     (newsComment) => newsComment.newsCommentFavorites,
   )
-  comment: Comment;
+  comment: NewsComment;
 
   @ManyToOne(() => User, (user) => user.newsCommentFavorites)
   user: User;

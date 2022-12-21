@@ -28,14 +28,17 @@ export class NewsCommentRepository {
       const newsComments = await this.newsCommentRepository
         .createQueryBuilder('newsComment')
         .leftJoinAndSelect('newsComment.user', 'user')
+        .leftJoinAndSelect('newsComment.newsCommentFavorites', 'favorite')
         .select([
           'newsComment.id as id',
           'newsComment.userId as userId',
           'newsComment.comment as comment',
           'user.name as nickname',
-          'newsComment.createdDate as createdDate',
+          'newsComment.createdAt as createdDate',
         ])
+        .addSelect('COUNT(favorite.id) AS favorite')
         .where({ newsId: newsId })
+        .groupBy('newsComment.id')
         .getRawMany();
       return newsComments;
     } catch (error) {
