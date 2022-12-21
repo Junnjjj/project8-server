@@ -1,11 +1,13 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { PFavoriteRepository } from '../PFavorite.repository';
 import { ProductRepository } from '../../product/product.repository';
+import { NCFavoriteRepository } from '../NCFavorite.repository';
 
 @Injectable()
 export class FavoriteService {
   constructor(
     private readonly pFavoriteRepository: PFavoriteRepository,
+    private readonly ncFavoriteRepository: NCFavoriteRepository,
     private readonly productRepository: ProductRepository,
   ) {}
 
@@ -39,5 +41,28 @@ export class FavoriteService {
     }
 
     return await this.pFavoriteRepository.enrollFavorite({ userId, productId });
+  }
+
+  async enrollNCFavorite({ user, cid }) {
+    const userId = user.id;
+    const commentId = cid;
+
+    const existFavorite = await this.ncFavoriteRepository.checkExistFavorite({
+      commentId,
+      userId,
+    });
+
+    // 1. 이미 Favorite 등록한 경우 => 삭제하기
+    if (existFavorite) {
+      return await this.ncFavoriteRepository.deleteFavorite({
+        commentId,
+        userId,
+      });
+    }
+
+    return await this.ncFavoriteRepository.enrollFavorite({
+      userId,
+      commentId,
+    });
   }
 }

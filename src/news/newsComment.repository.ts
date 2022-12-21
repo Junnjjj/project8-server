@@ -33,7 +33,7 @@ export class NewsCommentRepository {
           'newsComment.userId as userId',
           'newsComment.comment as comment',
           'user.name as nickname',
-          // 'newsComment.createdDate as createdDate',
+          'newsComment.createdDate as createdDate',
         ])
         .where({ newsId: newsId })
         .getRawMany();

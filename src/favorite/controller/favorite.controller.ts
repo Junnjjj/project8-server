@@ -13,4 +13,11 @@ export class FavoriteController {
   enrollFavorite(@CurrentUser() user, @Param('pid') pid: number) {
     return this.favoriteService.enrollProductFavorite({ user, pid });
   }
+
+  // News Comment Favorite 추가
+  @Get('/news/comment/:cid')
+  @UseGuards(JwtAuthGuard)
+  enrollNCFavorite(@CurrentUser() user, @Param('cid') cid: number) {
+    return this.favoriteService.enrollNCFavorite({ user, cid });
+  }
 }

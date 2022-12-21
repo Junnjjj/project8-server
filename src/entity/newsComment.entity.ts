@@ -6,10 +6,12 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { News } from './news.entity';
 import { User } from './user.entity';
+import { NewsCommentFavorite } from './newsCommentFavorite.entity';
 
 @Entity()
 export class NewsComment extends BaseEntity {
@@ -25,8 +27,8 @@ export class NewsComment extends BaseEntity {
   @Column({ name: 'newsId' })
   newsId: number;
 
-  // @CreateDateColumn()
-  // createdAt: Date;
+  @CreateDateColumn()
+  createdAt: Date;
 
   @DeleteDateColumn()
   deleteAt: Date;
@@ -38,4 +40,10 @@ export class NewsComment extends BaseEntity {
   @ManyToOne(() => User, (user) => user.newsComments)
   @JoinColumn({ name: 'userId' })
   user: User;
+
+  @OneToMany(
+    () => NewsCommentFavorite,
+    (newsCommentFavorite) => newsCommentFavorite.comment,
+  )
+  newsCommentFavorites: NewsCommentFavorite[];
 }
