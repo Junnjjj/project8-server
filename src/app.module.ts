@@ -31,6 +31,7 @@ import { NewsModule } from './news/news.module';
 import { NewsFile } from './entity/newsFile.entity';
 import { StorageModule } from './storage/storage.module';
 import { MediaModule } from './media/media.module';
+import { NewsComment } from './entity/newsComment.entity';
 
 const DEFAULT_ADMIN = {
   email: 'admin@example.com',
@@ -66,6 +67,7 @@ AdminJS.registerAdapter({
             UserAuthority,
             News,
             NewsFile,
+            NewsComment,
           ],
         },
         auth: {
@@ -99,6 +101,7 @@ AdminJS.registerAdapter({
         UserAuthority,
         News,
         NewsFile,
+        NewsComment,
       ],
       logging: ['warn', 'error'],
       synchronize: false,

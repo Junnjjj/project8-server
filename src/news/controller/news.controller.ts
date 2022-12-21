@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -18,6 +19,8 @@ import { Roles } from '../../common/decorators/role.decorator';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { multerOptions } from '../../common/utils/multer.options';
 import { News } from '../../entity/news.entity';
+import { CurrentUser } from '../../common/decorators/user.decorator';
+import { User } from '../../entity/user.entity';
 
 @Controller('news')
 export class NewsController {
@@ -46,16 +49,34 @@ export class NewsController {
   }
 
   @Get('/findByFilter/?')
-  async showNewsByPage(
-    @Query('page') page: number,
-    @Query('limit') limit: number,
-  ) {
+  showNewsByPage(@Query('page') page: number, @Query('limit') limit: number) {
     return this.newsService.showNewsByPage(page, limit);
   }
 
   @Get('/length')
   getNewsLength() {
     return this.newsService.getNewsLength();
+  }
+
+  @Post('/comment/:nid')
+  @UseGuards(JwtAuthGuard)
+  createNewsComment(
+    @Param('nid') nid: number,
+    @CurrentUser() user: User,
+    @Body() body,
+  ) {
+    return this.newsService.createComment(body, user, nid);
+  }
+
+  @Get('/comment/:nid')
+  getNewsComments(@Param('nid') nid: number) {
+    return this.newsService.getComments(nid);
+  }
+
+  @Delete('/comment/:cid')
+  @UseGuards(JwtAuthGuard)
+  deleteComment(@CurrentUser() user: User, @Param('cid') cid: number) {
+    return this.newsService.deleteComment({ user, cid });
   }
 
   @Get(':id')

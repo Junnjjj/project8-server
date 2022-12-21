@@ -2,12 +2,16 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { NewsRepository } from '../news.repository';
 import { NewsFileRepository } from '../newsFile.repository';
 import { DataSource } from 'typeorm';
+import { NewsCommentRepository } from '../newsComment.repository';
+import { UserRepository } from '../../user/user.repository';
 
 @Injectable()
 export class NewsService {
   constructor(
     private readonly newsRepository: NewsRepository,
     private readonly newsFileRepository: NewsFileRepository,
+    private readonly newsCommentRepository: NewsCommentRepository,
+    private readonly userRepository: UserRepository,
     private dataSource: DataSource,
   ) {}
 
@@ -81,5 +85,51 @@ export class NewsService {
 
   async getNewsLength() {
     return await this.newsRepository.getNewsLength();
+  }
+
+  async createComment(body, user, newsId) {
+    const userId = user.id;
+    const { content } = body;
+
+    return await this.newsCommentRepository.createComment(
+      userId,
+      newsId,
+      content,
+    );
+  }
+
+  async getComments(newsId) {
+    const commentList = await this.newsCommentRepository.getComments(newsId);
+
+    if (commentList.length === 0) {
+      return commentList;
+    }
+
+    // 이미지 삽입
+    for (let i = 0; i < commentList.length; i++) {
+      const profileInfo = await this.userRepository.findProfileId(
+        commentList[i].userId,
+      );
+      commentList[i]['photoImg'] = profileInfo.photoImg;
+    }
+
+    return commentList;
+  }
+
+  async deleteComment({ user, cid }) {
+    const userId = user.id;
+    const commentId = cid;
+
+    const isMyComment: boolean =
+      await this.newsCommentRepository.checkCommentOwner({
+        userId,
+        commentId,
+      });
+
+    if (!isMyComment) {
+      throw new HttpException('댓글의 사용자가 아닙니다.', 401);
+    }
+
+    return await this.newsCommentRepository.deleteComment(commentId);
   }
 }

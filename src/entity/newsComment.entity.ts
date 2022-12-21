@@ -1,6 +1,7 @@
 import {
   BaseEntity,
   Column,
+  CreateDateColumn,
   DeleteDateColumn,
   Entity,
   JoinColumn,
@@ -23,6 +24,9 @@ export class NewsComment extends BaseEntity {
 
   @Column({ name: 'newsId' })
   newsId: number;
+
+  // @CreateDateColumn()
+  // createdAt: Date;
 
   @DeleteDateColumn()
   deleteAt: Date;

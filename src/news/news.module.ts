@@ -6,11 +6,27 @@ import { News } from '../entity/news.entity';
 import { NewsRepository } from './news.repository';
 import { NewsFileRepository } from './newsFile.repository';
 import { NewsFile } from '../entity/newsFile.entity';
+import { NewsComment } from '../entity/newsComment.entity';
+import { NewsCommentRepository } from './newsComment.repository';
+import { UserModule } from '../user/user.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([News, NewsFile])],
-  providers: [NewsService, NewsRepository, NewsFileRepository],
+  imports: [
+    UserModule,
+    TypeOrmModule.forFeature([News, NewsFile, NewsComment]),
+  ],
+  providers: [
+    NewsService,
+    NewsRepository,
+    NewsFileRepository,
+    NewsCommentRepository,
+  ],
   controllers: [NewsController],
-  exports: [NewsService, NewsRepository, NewsFileRepository],
+  exports: [
+    NewsService,
+    NewsRepository,
+    NewsFileRepository,
+    NewsCommentRepository,
+  ],
 })
 export class NewsModule {}

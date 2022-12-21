@@ -91,7 +91,6 @@ export class AlarmRepository {
         .where('id = :id', { id: id })
         .execute();
     } catch (error) {
-      console.log(error);
       throw new HttpException(error, 400);
     }
   }
