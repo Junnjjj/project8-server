@@ -12,6 +12,7 @@ import {
 import { UserAuthority } from './userAuthority.entity';
 import { NewsFile } from './newsFile.entity';
 import { NewsComment } from './newsComment.entity';
+import { NewsFavorite } from './NewsFavorite.entity';
 
 @Entity()
 export class News extends BaseEntity {
@@ -56,4 +57,7 @@ export class News extends BaseEntity {
 
   @OneToMany(() => NewsComment, (newsComment) => newsComment.news)
   newsComments: NewsComment[];
+
+  @OneToMany(() => NewsFavorite, (newsFavorite) => newsFavorite.news)
+  newsFavorites: NewsFavorite[];
 }

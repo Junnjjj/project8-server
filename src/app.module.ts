@@ -34,6 +34,7 @@ import { NewsComment } from './entity/newsComment.entity';
 import { NewsCommentFavorite } from './entity/newsCommentFavorite.entity';
 import { NewsCommentReport } from './entity/newsCommentReport.entity';
 import { ReportModule } from './report/report.module';
+import { NewsFavorite } from './entity/NewsFavorite.entity';
 
 const DEFAULT_ADMIN = {
   email: 'admin@example.com',
@@ -72,6 +73,7 @@ AdminJS.registerAdapter({
             NewsComment,
             NewsCommentFavorite,
             NewsCommentReport,
+            NewsFavorite,
           ],
         },
         auth: {
@@ -108,6 +110,7 @@ AdminJS.registerAdapter({
         NewsComment,
         NewsCommentFavorite,
         NewsCommentReport,
+        NewsFavorite,
       ],
       logging: ['warn', 'error'],
       synchronize: false,

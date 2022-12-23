@@ -29,14 +29,19 @@ export class NewsCommentRepository {
         .createQueryBuilder('newsComment')
         .leftJoinAndSelect('newsComment.user', 'user')
         .leftJoinAndSelect('newsComment.newsCommentFavorites', 'favorite')
+        .leftJoinAndSelect('newsComment.newsCommentReports', 'report')
         .select([
           'newsComment.id as id',
           'newsComment.userId as userId',
-          'newsComment.comment as comment',
+          // 'newsComment.comment as comment',
           'user.name as nickname',
           'newsComment.createdAt as createdDate',
         ])
         .addSelect('COUNT(favorite.id) AS favorite')
+        .addSelect(
+          `if(count(report.id) < 10, newsComment.comment, '여러번 신고 당한 댓글 입니다.') as comment`,
+        )
+        // .addSelect('COUNT(report.id) AS report')
         .where({ newsId: newsId })
         .groupBy('newsComment.id')
         .getRawMany();

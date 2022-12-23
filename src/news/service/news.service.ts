@@ -29,7 +29,12 @@ export class NewsService {
   }
 
   async showOneNews(newsId) {
-    return await this.newsRepository.findNewsById(newsId);
+    const news = await this.newsRepository.findNewsById(newsId);
+    const favoritesLength = news.newsFavorites.length;
+    delete news.newsFavorites;
+    news['favorite'] = favoritesLength;
+
+    return news;
   }
 
   async createNews(body, role) {

@@ -16,6 +16,7 @@ export class NewsRepository {
       const news = await this.newsRepository
         .createQueryBuilder('news')
         .leftJoinAndSelect('news.newsFiles', 'newsFile')
+        .leftJoinAndSelect('news.newsFavorites', 'favorite')
         .where({ id: newsId })
         .getOne();
       return news;
