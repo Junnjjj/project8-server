@@ -13,6 +13,7 @@ import { BiddingLog } from './biddingLog.entity';
 import { User } from './user.entity';
 import { ProductFavorite } from './productFavorite.entity';
 import { Alarm } from './alarm.entity';
+import { Qna } from './qna.entity';
 
 @Entity()
 export class Product extends BaseEntity {
@@ -89,4 +90,9 @@ export class Product extends BaseEntity {
 
   @OneToMany(() => Alarm, (alarm) => alarm.product)
   alarms: Alarm[];
+
+  @OneToMany(() => Qna, (qna) => qna.product, {
+    cascade: true,
+  })
+  qnas: Qna[];
 }

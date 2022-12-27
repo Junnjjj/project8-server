@@ -20,6 +20,8 @@ import { FavoriteModule } from './favorite/favorite.module';
 import { ProductFavorite } from './entity/productFavorite.entity';
 import { AlarmModule } from './alarm/alarm.module';
 import { Alarm } from './entity/alarm.entity';
+import { QnaModule } from './qna/qna.module';
+import { Qna } from './entity/qna.entity';
 
 import { AdminModule } from '@adminjs/nestjs';
 import * as AdminJSTypeorm from '@adminjs/typeorm';
@@ -74,6 +76,7 @@ AdminJS.registerAdapter({
             NewsCommentFavorite,
             NewsCommentReport,
             NewsFavorite,
+            Qna,
           ],
         },
         auth: {
@@ -111,6 +114,7 @@ AdminJS.registerAdapter({
         NewsCommentFavorite,
         NewsCommentReport,
         NewsFavorite,
+        Qna,
       ],
       logging: ['warn', 'error'],
       synchronize: false,
@@ -130,6 +134,7 @@ AdminJS.registerAdapter({
     StorageModule,
     MediaModule,
     ReportModule,
+    QnaModule,
   ],
   controllers: [AppController],
   providers: [AppService],
