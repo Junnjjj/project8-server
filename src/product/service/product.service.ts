@@ -101,6 +101,7 @@ export class ProductService {
       await this.cronService.addBiddingEndCronJob(newProduct.id, endDateTime);
 
       await queryRunner.commitTransaction();
+
       return result;
     } catch (error) {
       await queryRunner.rollbackTransaction();

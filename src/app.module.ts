@@ -21,6 +21,8 @@ import { FavoriteModule } from './favorite/favorite.module';
 import { ProductFavorite } from './entity/productFavorite.entity';
 import { AlarmModule } from './alarm/alarm.module';
 import { Alarm } from './entity/alarm.entity';
+import { QnaModule } from './qna/qna.module';
+import { Qna } from './entity/qna.entity';
 
 @Module({
   imports: [
@@ -40,6 +42,7 @@ import { Alarm } from './entity/alarm.entity';
         UserProfile,
         ProductFavorite,
         Alarm,
+        Qna,
       ],
       logging: ['warn', 'error'],
       synchronize: false,
@@ -55,6 +58,7 @@ import { Alarm } from './entity/alarm.entity';
     MemberModule,
     FavoriteModule,
     AlarmModule,
+    QnaModule,
   ],
   controllers: [AppController, UserController],
   providers: [AppService],
