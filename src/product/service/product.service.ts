@@ -24,10 +24,11 @@ export class ProductService {
     return productList;
   }
 
-  async showProductsByPage(pageNum: number, limitNum: number) {
+  async showProductsByPage(pageNum: number, limitNum: number, type: number) {
     const productList = await this.productRepository.findProductsByPage(
       pageNum,
       limitNum,
+      type,
     );
     return productList;
   }
@@ -70,7 +71,7 @@ export class ProductService {
         endHour,
         bidUnit,
         endTime: endDateTime,
-        user: userId,
+        userId: userId,
       });
 
       // 2. 이미지 파일들 외래키 설정
@@ -100,6 +101,7 @@ export class ProductService {
       await this.cronService.addBiddingEndCronJob(newProduct.id, endDateTime);
 
       await queryRunner.commitTransaction();
+
       return result;
     } catch (error) {
       await queryRunner.rollbackTransaction();

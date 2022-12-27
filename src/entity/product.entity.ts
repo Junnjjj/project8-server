@@ -6,13 +6,17 @@ import {
   CreateDateColumn,
   ManyToOne,
   JoinColumn,
+  BaseEntity,
 } from 'typeorm';
 import { ProductFile } from './productFile.entity';
 import { BiddingLog } from './biddingLog.entity';
 import { User } from './user.entity';
+import { ProductFavorite } from './productFavorite.entity';
+import { Alarm } from './alarm.entity';
+import { Qna } from './qna.entity';
 
 @Entity()
-export class Product {
+export class Product extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -57,6 +61,9 @@ export class Product {
   @Column({ nullable: true })
   owner: number;
 
+  @Column({ name: 'userId' })
+  userId: number;
+
   // product 판매자
   @ManyToOne(() => User, (user) => user.products)
   @JoinColumn({ name: 'userId' })
@@ -71,4 +78,21 @@ export class Product {
     cascade: true,
   })
   biddingLogs: BiddingLog[];
+
+  @OneToMany(
+    () => ProductFavorite,
+    (productFavorite) => productFavorite.product,
+    {
+      cascade: true,
+    },
+  )
+  productFavorites: ProductFavorite[];
+
+  @OneToMany(() => Alarm, (alarm) => alarm.product)
+  alarms: Alarm[];
+
+  @OneToMany(() => Qna, (qna) => qna.product, {
+    cascade: true,
+  })
+  qnas: Qna[];
 }

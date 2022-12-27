@@ -31,26 +31,40 @@ export class AuthService {
       throw new UnauthorizedException('이메일과 비밀번호를 확인해주세요.');
     }
 
+    this.convertInAuthorities(user);
+
     // 2. ID 값을 통해 access Token, Refresh Token 발급
-    const AccessToken = this.getCookieWithJwtAccessToken(loginId, user.id);
+    const AccessToken = this.getCookieWithJwtAccessToken(
+      loginId,
+      user.id,
+      user.authorities,
+    );
     const RefreshToken = this.getCookieWithJwtRefreshToken(user.id);
 
     return {
-      // token: this.jwtService.sign(payload),
       AccessToken,
       RefreshToken,
     };
   }
 
   // Access Token - 30분
-  getCookieWithJwtAccessToken(loginId: string, id: number) {
-    const payload = { email: loginId, sub: id };
+  getCookieWithJwtAccessToken(loginId: string, id: number, authorities: any) {
+    const payload = { email: loginId, sub: id, authorities: authorities };
     const token = this.jwtService.sign(payload, {
       secret: process.env.JWT_ACCESS_TOKEN_SECRET,
       expiresIn: `${process.env.JWT_ACCESS_TOKEN_EXPIRATION_TIME}s`,
     });
 
-    return token;
+    return {
+      token: token,
+      options: {
+        domain:
+          process.env.MODE === 'DEV' ? 'localhost' : process.env.DOMAIN_URL,
+        path: '/',
+        httpOnly: true,
+        maxAge: Number(process.env.JWT_ACCESS_TOKEN_EXPIRATION_TIME) * 1000,
+      },
+    };
   }
 
   // Refresh Token - 7일
@@ -64,7 +78,8 @@ export class AuthService {
     return {
       token: token,
       options: {
-        domain: 'localhost',
+        domain:
+          process.env.MODE === 'DEV' ? 'localhost' : process.env.DOMAIN_URL,
         path: '/',
         httpOnly: true,
         maxAge: Number(process.env.JWT_REFRESH_TOKEN_EXPIRATION_TIME) * 1000,
@@ -80,11 +95,29 @@ export class AuthService {
   }
 
   deleteJwtCookie(res) {
-    res.cookie('refreshToken', '', {
-      domain: 'localhost',
+    res.cookie('ajt', '', {
+      domain: process.env.MODE === 'DEV' ? 'localhost' : process.env.DOMAIN_URL,
       path: '/',
       httpOnly: true,
       maxAge: 0,
     });
+
+    res.cookie('rjt', '', {
+      domain: process.env.MODE === 'DEV' ? 'localhost' : process.env.DOMAIN_URL,
+      path: '/',
+      httpOnly: true,
+      maxAge: 0,
+    });
+  }
+
+  private convertInAuthorities(user: any): User {
+    if (user && user.authorities) {
+      const authorities: any[] = [];
+      user.authorities.forEach((authority) =>
+        authorities.push({ name: authority.authorityName }),
+      );
+      user.authorities = authorities;
+    }
+    return user;
   }
 }

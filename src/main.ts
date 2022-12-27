@@ -20,7 +20,7 @@ async function bootstrap() {
   //쿠키를 읽기 위한 쿠키파서
   app.use(cookieParser());
   app.enableCors({
-    origin: process.env.MODE === 'DEV' ? true : process.env.ORIGIN,
+    origin: process.env.MODE === 'DEV' ? true : process.env.FRONT_URL,
     credentials: true,
   });
 

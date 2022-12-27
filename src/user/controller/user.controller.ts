@@ -23,8 +23,8 @@ export class UserController {
     private readonly authService: AuthService,
   ) {}
 
-  @UseGuards(JwtAuthGuard)
   @Get()
+  @UseGuards(JwtAuthGuard)
   getCurrentUser(@CurrentUser() user, @Req() req: Request) {
     return user;
   }
@@ -50,17 +50,18 @@ export class UserController {
       RefreshToken.token,
     );
 
-    // Set-Cookie 에 Refresh Token 저장
-    res.cookie('refreshToken', RefreshToken.token, RefreshToken.options);
+    // Set-Cookie 에 AccessToken, Refresh Token 저장
+    // res.header('Access-Control-Allow-Headers', process.env.FRONT_URL);
+    res.cookie('ajt', AccessToken.token, AccessToken.options);
+    res.cookie('rjt', RefreshToken.token, RefreshToken.options);
 
-    // Access Token response data 에 반환
     return res.send({
-      accessToken: AccessToken,
+      message: 'loginSuccess',
     });
   }
 
-  @UseGuards(JwtAuthGuard)
   @Post('/logout')
+  @UseGuards(JwtAuthGuard)
   async logout(@Req() req: Request, @Res() res: Response, @CurrentUser() user) {
     // DB에 Refresh Token 삭제
     await this.userService.deleteRefreshToken(user.loginId);
@@ -82,7 +83,6 @@ export class UserController {
     @CurrentUser() user,
   ): any {
     const jwt = req.cookies['refreshToken'];
-    console.log(jwt);
     return res.send(jwt);
   }
 }

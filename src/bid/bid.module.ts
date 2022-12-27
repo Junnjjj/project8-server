@@ -6,10 +6,12 @@ import { BiddingLogRepository } from './biddingLog.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { BiddingLog } from '../entity/biddingLog.entity';
 import { UserModule } from '../user/user.module';
+import { AlarmModule } from '../alarm/alarm.module';
 
 @Module({
   imports: [
     UserModule,
+    AlarmModule,
     TypeOrmModule.forFeature([BiddingLog]),
     forwardRef(() => ProductModule),
   ],

@@ -40,9 +40,11 @@ export class ProductRepository {
   async findProductsByPage(
     pageNum: number,
     limitNum: number,
+    type: number,
   ): Promise<Product[] | null> {
     const limit = limitNum; //페이지 당 표시할 프로덕트 수
     const skip = (pageNum - 1) * limit; //스킵할 프로덕트 수
+    const aType = Number(type) === 0 ? [1, 2, 3] : type;
     try {
       const productList = await this.productRepository
         .createQueryBuilder('product')
@@ -63,6 +65,7 @@ export class ProductRepository {
         ])
         .addSelect('COUNT(biddingLog.id) AS biddingCount')
         .where({ active: true })
+        .andWhere('product.eType IN (:aType)', { aType: aType })
         .groupBy('product.id')
         .limit(limit)
         .offset(skip)
@@ -99,7 +102,20 @@ export class ProductRepository {
         .groupBy('product.id')
         .getRawOne();
 
+      const favoriteInfo = await this.productRepository
+        .createQueryBuilder('product')
+        .leftJoinAndSelect(
+          'product_favorite',
+          'productFavorite',
+          'productFavorite.productId = product.id',
+        )
+        .where({ id: productId })
+        .select('COUNT(productFavorite.id) AS count')
+        .groupBy('product.id')
+        .getRawOne();
+
       product['biddingCount'] = productBiddingInfo['biddingCount'];
+      product['favoriteCount'] = favoriteInfo['count'];
 
       return product;
     } catch (error) {
@@ -174,5 +190,63 @@ export class ProductRepository {
 
   async updateOwner({ queryRunner, pid, id }) {
     await queryRunner.manager.update(Product, pid, { owner: id });
+  }
+
+  async getProductWhereBiddingOn(productIds) {
+    try {
+      const result = await this.productRepository
+        .createQueryBuilder('product')
+        .select(['id', 'name', 'nowPrice'])
+        .where('id IN (:ids)', { ids: productIds })
+        .andWhere('active = 1')
+        .getRawMany();
+
+      return result;
+    } catch (error) {
+      throw new HttpException('db error', 400);
+    }
+  }
+
+  async getProductOnSale(userId) {
+    try {
+      const result = await this.productRepository
+        .createQueryBuilder('product')
+        .select(['id', 'name', 'nowPrice', 'endTime'])
+        .where('userId = :userId', { userId: userId })
+        .andWhere('active = true')
+        .getRawMany();
+
+      return result;
+    } catch (error) {
+      throw new HttpException(error, 400);
+    }
+  }
+
+  async getBiddingSuccessProducts(userId) {
+    try {
+      const result = await this.productRepository
+        .createQueryBuilder('product')
+        .select(['id', 'name', 'nowPrice'])
+        .where('owner = :owner', { owner: userId })
+        .getRawMany();
+
+      return result;
+    } catch (error) {
+      throw new HttpException('db error', 400);
+    }
+  }
+
+  async getSaleProducts(userId) {
+    try {
+      const result = await this.productRepository
+        .createQueryBuilder('product')
+        .select(['id', 'name', 'nowPrice'])
+        .where('userId = :userId', { userId: userId })
+        .andWhere('owner is NOT NULL')
+        .getRawMany();
+      return result;
+    } catch (error) {
+      throw new HttpException(error, 400);
+    }
   }
 }

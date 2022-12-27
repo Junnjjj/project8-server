@@ -4,6 +4,7 @@ import { BiddingLogRepository } from '../biddingLog.repository';
 import { DataSource } from 'typeorm';
 import { UserProfileRepository } from '../../user/userProfile.repository';
 import { UserRepository } from '../../user/user.repository';
+import { AlarmRepository } from '../../alarm/alarm.repository';
 
 @Injectable()
 export class BidService {
@@ -12,6 +13,7 @@ export class BidService {
     private readonly productRepository: ProductRepository,
     private readonly userRepository: UserRepository,
     private readonly userProfileRepository: UserProfileRepository,
+    private readonly alarmRepository: AlarmRepository,
     private dataSource: DataSource,
   ) {}
 
@@ -60,6 +62,27 @@ export class BidService {
     if (!checkBiddingPrice) {
       throw new HttpException('앞선 입찰이 존재합니다.', 401);
     }
+
+    // (추가-alarm) 앞선 입찰이 존재하면 => 앞선입찰 사용자에게 alarm 생성
+    const prevBiddingUserId = await this.biddingLogRepository.prevBiddingUserId(
+      { productId },
+    );
+    if (prevBiddingUserId) {
+      await this.alarmRepository.createAlarm({
+        productId,
+        userId: prevBiddingUserId,
+        type: 0,
+      });
+    }
+
+    // (추가 - alarm) => product User에게 입찰된 사실 알리기.
+    const productInfo = await this.productRepository.findProductPId(productId);
+    const productUserId = productInfo.userId;
+    await this.alarmRepository.createAlarm({
+      productId,
+      userId: productUserId,
+      type: 4,
+    });
 
     // 트랙잭션 형성
     const queryRunner = this.dataSource.createQueryRunner();

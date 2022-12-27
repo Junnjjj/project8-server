@@ -6,12 +6,13 @@ import {
   ManyToMany,
   CreateDateColumn,
   JoinTable,
+  BaseEntity,
 } from 'typeorm';
 import { Product } from './product.entity';
 import { User } from './user.entity';
 
 @Entity()
-export class BiddingLog {
+export class BiddingLog extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
