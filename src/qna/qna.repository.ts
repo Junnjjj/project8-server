@@ -46,6 +46,17 @@ export class QnaRepository {
     }
   }
 
+  async findQnaByQid(qid): Promise<Qna | null> {
+    try {
+      const result = await this.qnaRepository.findOne({
+        where: { id: qid },
+      });
+      return result;
+    } catch (error) {
+      throw new HttpException('db error', 400);
+    }
+  }
+
   async createQna(queryRunner, qna) {
     return await queryRunner.manager.save(Qna, qna);
   }

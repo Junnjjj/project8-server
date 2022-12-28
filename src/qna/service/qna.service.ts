@@ -4,12 +4,14 @@ import { QnaRequestDto } from '../dto/qna.request.dto';
 import { User } from '../../entity/user.entity';
 import { DataSource } from 'typeorm';
 import { UserRepository } from '../../user/user.repository';
+import { ProductRepository } from '../../product/product.repository';
 
 @Injectable()
 export class QnaService {
   constructor(
     private readonly qnaRepository: QnaRepository,
     private readonly userRepository: UserRepository,
+    private readonly productRepository: ProductRepository,
     private dataSource: DataSource,
   ) {}
 
@@ -46,11 +48,19 @@ export class QnaService {
     await queryRunner.startTransaction();
 
     try {
-      // answer 인 경우 ( qid 가 존재하는 경우 )
-
-      // 1. pid 제품의 판매자가 user 와 같은지 확인
-
-      // 2. reference qid 의 question 이 존재하는지 확인
+      //answer 일 경우
+      if (qid) {
+        const product = await this.productRepository.findProductPId(productId);
+        // 1. pid 제품의 판매자가 user 와 같지 않으면 예외처리
+        if (product.id != userId) {
+          throw new HttpException('제품의 판매자가 아닙니다.', 400);
+        }
+        // 2. reference qid 의 question이 존재하는지 확인
+        const question = await this.qnaRepository.findQnaByQid(qid);
+        if (!question) {
+          throw new HttpException('질문이 존재하지 않습니다.', 400);
+        }
+      }
 
       const newQna = await this.qnaRepository.createQna(queryRunner, {
         reference: qid,
