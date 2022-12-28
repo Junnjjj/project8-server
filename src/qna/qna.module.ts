@@ -9,7 +9,12 @@ import { AlarmModule } from '../alarm/alarm.module';
 import { ProductModule } from '../product/product.module';
 
 @Module({
-  imports: [UserModule, AlarmModule,ProductModule ,TypeOrmModule.forFeature([Qna])],
+  imports: [
+    UserModule,
+    AlarmModule,
+    ProductModule,
+    TypeOrmModule.forFeature([Qna]),
+  ],
   controllers: [QnaController],
   providers: [QnaService, QnaRepository],
   exports: [QnaService, QnaRepository],

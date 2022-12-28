@@ -22,6 +22,18 @@ export class QnaRepository {
     }
   }
 
+  async getQnaOwner(qid) {
+    try {
+      const result = await this.qnaRepository
+        .createQueryBuilder('qna')
+        .where('id = :id', { id: qid })
+        .getOne();
+      return result.userId;
+    } catch (error) {
+      throw new HttpException(error, 400);
+    }
+  }
+
   async findAllQnaByPid(productId): Promise<Qna[] | null> {
     try {
       // const qnaList = await this.qnaRepository.find({
