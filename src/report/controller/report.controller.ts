@@ -13,4 +13,11 @@ export class ReportController {
   reportNewsComment(@CurrentUser() user, @Param('cid') cid: number) {
     return this.reportService.reportNewsComment({ user, cid });
   }
+
+  //Qna 신고하기
+  @Get('/qna/:qid')
+  @UseGuards(JwtAuthGuard)
+  reportQna(@CurrentUser() user, @Param('qid') qid: number) {
+    return this.reportService.reportQna({ user, qid });
+  }
 }

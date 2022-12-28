@@ -20,6 +20,7 @@ import { NewsCommentFavorite } from './newsCommentFavorite.entity';
 import { NewsCommentReport } from './newsCommentReport.entity';
 import { NewsFavorite } from './NewsFavorite.entity';
 import { Qna } from './qna.entity';
+import { QnaReport } from './qnaReport.entity';
 
 @Entity()
 export class User extends BaseEntity {
@@ -83,4 +84,7 @@ export class User extends BaseEntity {
 
   @OneToMany(() => Qna, (qna) => qna.user)
   qnas: Qna[];
+
+  @OneToMany(() => QnaReport, (qnaReport) => qnaReport.user)
+  qnaReports: QnaReport[];
 }

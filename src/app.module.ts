@@ -37,6 +37,7 @@ import { NewsCommentFavorite } from './entity/newsCommentFavorite.entity';
 import { NewsCommentReport } from './entity/newsCommentReport.entity';
 import { ReportModule } from './report/report.module';
 import { NewsFavorite } from './entity/NewsFavorite.entity';
+import { QnaReport } from './entity/qnaReport.entity';
 
 const DEFAULT_ADMIN = {
   email: 'admin@example.com',
@@ -77,6 +78,7 @@ AdminJS.registerAdapter({
             NewsCommentReport,
             NewsFavorite,
             Qna,
+            QnaReport,
           ],
         },
         auth: {
@@ -115,10 +117,11 @@ AdminJS.registerAdapter({
         NewsCommentReport,
         NewsFavorite,
         Qna,
+        QnaReport,
       ],
       logging: ['warn', 'error'],
       synchronize: false,
-      migrations: [Alarm],
+      migrations: [],
       migrationsTableName: 'custom_migration_table',
     }),
     UserModule,
