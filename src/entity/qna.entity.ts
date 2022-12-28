@@ -6,12 +6,14 @@ import {
   ManyToOne,
   JoinColumn,
   DeleteDateColumn,
+  BaseEntity,
 } from 'typeorm';
 import { Product } from './product.entity';
 import { User } from './user.entity';
+import { QnaReport } from './qnaReport.entity';
 
 @Entity()
-export class Qna {
+export class Qna extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -42,4 +44,7 @@ export class Qna {
   @ManyToOne(() => User, (user) => user.qnas)
   @JoinColumn({ name: 'userId' })
   user: User;
+
+  @ManyToOne(() => QnaReport, (qnaReport) => qnaReport.qna)
+  qnaReports: QnaReport;
 }

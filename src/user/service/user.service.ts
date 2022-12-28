@@ -7,12 +7,14 @@ import * as bcrypt from 'bcrypt';
 import { UsersRequestDto } from '../dto/user.request.dto';
 import { UserRepository } from '../user.repository';
 import { UserProfileRepository } from '../userProfile.repository';
+import { UserAuthorityRepository } from '../../auth/userAuthority.repository';
 
 @Injectable()
 export class UserService {
   constructor(
     private readonly userRepository: UserRepository,
     private readonly userProfileRepository: UserProfileRepository,
+    private readonly userAuthorityRepository: UserAuthorityRepository,
   ) {}
 
   async getUserProductData(id: number) {
@@ -44,6 +46,11 @@ export class UserService {
       passwd: hashedPassword,
       name,
       profile: profile,
+    });
+
+    await this.userAuthorityRepository.createUserAuthority({
+      userId: user.userId,
+      auth: 'ROLE_USER',
     });
 
     return user;

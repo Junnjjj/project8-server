@@ -3,6 +3,7 @@ import { UsersRequestDto } from './dto/user.request.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../entity/user.entity';
+import { UserAuthority } from '../entity/userAuthority.entity';
 
 @Injectable()
 export class UserRepository {
@@ -14,7 +15,11 @@ export class UserRepository {
   async createUser(user) {
     try {
       const result = await this.usersRepository.save(user);
-      const response = { message: 'SignUp success', loginId: result.loginId };
+      const response = {
+        message: 'SignUp success',
+        loginId: result.loginId,
+        userId: result.id,
+      };
 
       return response;
     } catch (error) {
@@ -26,6 +31,9 @@ export class UserRepository {
     try {
       const user = await this.usersRepository.findOne({
         where: { loginId: email },
+        relations: {
+          authorities: true,
+        },
       });
       return user;
     } catch (error) {
@@ -55,7 +63,7 @@ export class UserRepository {
           passwd: false,
         },
         where: { id: userId },
-        relations: { profile: true },
+        relations: { profile: true, authorities: true },
       });
       return user;
     } catch (error) {

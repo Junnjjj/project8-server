@@ -1,4 +1,5 @@
 import {
+  BaseEntity,
   Column,
   CreateDateColumn,
   DeleteDateColumn,
@@ -12,7 +13,7 @@ import { User } from './user.entity';
 import { Product } from './product.entity';
 
 @Entity()
-export class Alarm {
+export class Alarm extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -30,7 +31,7 @@ export class Alarm {
 
   @Column({ name: 'userId' })
   @Index()
-  userId: string;
+  userId: number;
 
   @CreateDateColumn({ type: 'timestamp' })
   createdDate: Date;

@@ -7,6 +7,7 @@ import {
   Post,
   Patch,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../../auth/jwt/jwt.guard';
 import { CurrentUser } from '../../common/decorators/user.decorator';
@@ -44,6 +45,17 @@ export class QnaController {
     @CurrentUser() user: User,
   ) {
     //Post 요청에 qid가 오면 answer 생성
+    return this.qnaService.createQna(body, user, pid, qid);
+  }
+
+  @Post('/?')
+  @UseGuards(JwtAuthGuard)
+  async createQnAUseQuery(
+    @Query('pid') pid: number,
+    @Query('qid') qid: number = null,
+    @Body() body: QnaRequestDto,
+    @CurrentUser() user: User,
+  ) {
     return this.qnaService.createQna(body, user, pid, qid);
   }
 

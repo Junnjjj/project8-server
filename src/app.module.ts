@@ -1,7 +1,6 @@
 import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UserController } from './user/controller/user.controller';
 import { LoggerMiddleware } from './common/middlewares/logger.middleware';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
@@ -24,9 +23,77 @@ import { Alarm } from './entity/alarm.entity';
 import { QnaModule } from './qna/qna.module';
 import { Qna } from './entity/qna.entity';
 
+import { AdminModule } from '@adminjs/nestjs';
+import * as AdminJSTypeorm from '@adminjs/typeorm';
+import AdminJS from 'adminjs';
+import { UserAuthority } from './entity/userAuthority.entity';
+import { News } from './entity/news.entity';
+import { NewsModule } from './news/news.module';
+import { NewsFile } from './entity/newsFile.entity';
+import { StorageModule } from './storage/storage.module';
+import { MediaModule } from './media/media.module';
+import { NewsComment } from './entity/newsComment.entity';
+import { NewsCommentFavorite } from './entity/newsCommentFavorite.entity';
+import { NewsCommentReport } from './entity/newsCommentReport.entity';
+import { ReportModule } from './report/report.module';
+import { NewsFavorite } from './entity/NewsFavorite.entity';
+import { QnaReport } from './entity/qnaReport.entity';
+
+const DEFAULT_ADMIN = {
+  email: 'admin@example.com',
+  password: '123123',
+};
+
+const authenticate = async (email: string, password: string) => {
+  if (email === DEFAULT_ADMIN.email && password === DEFAULT_ADMIN.password) {
+    return Promise.resolve(DEFAULT_ADMIN);
+  }
+  return null;
+};
+
+AdminJS.registerAdapter({
+  Resource: AdminJSTypeorm.Resource,
+  Database: AdminJSTypeorm.Database,
+});
+
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    AdminModule.createAdminAsync({
+      useFactory: () => ({
+        adminJsOptions: {
+          rootPath: '/admin',
+          resources: [
+            User,
+            Product,
+            ProductFile,
+            BiddingLog,
+            UserProfile,
+            ProductFavorite,
+            Alarm,
+            UserAuthority,
+            News,
+            NewsFile,
+            NewsComment,
+            NewsCommentFavorite,
+            NewsCommentReport,
+            NewsFavorite,
+            Qna,
+            QnaReport,
+          ],
+        },
+        auth: {
+          authenticate,
+          cookieName: 'adminjs',
+          cookiePassword: 'secret',
+        },
+        sessionOptions: {
+          resave: true,
+          saveUninitialized: true,
+          secret: 'secret',
+        },
+      }),
+    }),
+    ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: process.env.DB_HOST,
@@ -42,11 +109,19 @@ import { Qna } from './entity/qna.entity';
         UserProfile,
         ProductFavorite,
         Alarm,
+        UserAuthority,
+        News,
+        NewsFile,
+        NewsComment,
+        NewsCommentFavorite,
+        NewsCommentReport,
+        NewsFavorite,
         Qna,
+        QnaReport,
       ],
       logging: ['warn', 'error'],
       synchronize: false,
-      migrations: [Alarm],
+      migrations: [],
       migrationsTableName: 'custom_migration_table',
     }),
     UserModule,
@@ -58,9 +133,13 @@ import { Qna } from './entity/qna.entity';
     MemberModule,
     FavoriteModule,
     AlarmModule,
+    NewsModule,
+    StorageModule,
+    MediaModule,
+    ReportModule,
     QnaModule,
   ],
-  controllers: [AppController, UserController],
+  controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {

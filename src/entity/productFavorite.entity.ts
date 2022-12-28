@@ -1,9 +1,9 @@
-import { Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { User } from './user.entity';
 import { Product } from './product.entity';
 
 @Entity()
-export class ProductFavorite {
+export class ProductFavorite extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 

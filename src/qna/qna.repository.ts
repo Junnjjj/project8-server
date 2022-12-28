@@ -22,11 +22,36 @@ export class QnaRepository {
     }
   }
 
+  async getQnaOwner(qid) {
+    try {
+      const result = await this.qnaRepository
+        .createQueryBuilder('qna')
+        .where('id = :id', { id: qid })
+        .getOne();
+      return result.userId;
+    } catch (error) {
+      throw new HttpException(error, 400);
+    }
+  }
+
   async findAllQnaByPid(productId): Promise<Qna[] | null> {
     try {
-      const qnaList = await this.qnaRepository.find({
-        where: { productId: productId },
-      });
+      // const qnaList = await this.qnaRepository.find({
+      //   where: { productId: productId },
+      // });
+      const qnaList = await this.qnaRepository
+        .createQueryBuilder('qna')
+        .leftJoinAndSelect('qna.user', 'user')
+        .select([
+          'qna.id as id',
+          'qna.createdDate as createdDate',
+          'qna.reference as reference',
+          'qna.content as content',
+          'qna.userId as userId',
+          'user.name as nickname',
+        ])
+        .where({ productId: productId })
+        .getRawMany();
       return qnaList;
     } catch (error) {
       throw new HttpException('db error', 400);
