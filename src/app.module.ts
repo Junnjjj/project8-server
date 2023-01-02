@@ -22,6 +22,8 @@ import { AlarmModule } from './alarm/alarm.module';
 import { Alarm } from './entity/alarm.entity';
 import { QnaModule } from './qna/qna.module';
 import { Qna } from './entity/qna.entity';
+import { Notice } from './entity/notice.entity';
+import { Inquiry } from './entity/inquiry.entity';
 
 import { AdminModule } from '@adminjs/nestjs';
 import * as AdminJSTypeorm from '@adminjs/typeorm';
@@ -38,6 +40,7 @@ import { NewsCommentReport } from './entity/newsCommentReport.entity';
 import { ReportModule } from './report/report.module';
 import { NewsFavorite } from './entity/NewsFavorite.entity';
 import { QnaReport } from './entity/qnaReport.entity';
+import { SupportModule } from './support/support.module';
 
 const DEFAULT_ADMIN = {
   email: 'admin@example.com',
@@ -79,6 +82,8 @@ AdminJS.registerAdapter({
             NewsFavorite,
             Qna,
             QnaReport,
+            Notice,
+            Inquiry,
           ],
         },
         auth: {
@@ -118,6 +123,8 @@ AdminJS.registerAdapter({
         NewsFavorite,
         Qna,
         QnaReport,
+        Notice,
+        Inquiry,
       ],
       logging: ['warn', 'error'],
       synchronize: false,
@@ -138,6 +145,7 @@ AdminJS.registerAdapter({
     MediaModule,
     ReportModule,
     QnaModule,
+    SupportModule,
   ],
   controllers: [AppController],
   providers: [AppService],
