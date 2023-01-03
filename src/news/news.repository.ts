@@ -34,6 +34,7 @@ export class NewsRepository {
     try {
       const newsList = await this.newsRepository
         .createQueryBuilder('news')
+        .leftJoinAndSelect('news.newsFavorites', 'favorite')
         .select([
           'news.id as id',
           'news.title as title',
@@ -41,6 +42,8 @@ export class NewsRepository {
           'news.openDate as openDate',
           'news.price as price',
         ])
+        .addSelect('COUNT(favorite.id) as favorite')
+        .groupBy('news.id')
         .limit(limit)
         .offset(skip)
         .getRawMany();
