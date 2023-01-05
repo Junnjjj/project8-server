@@ -8,10 +8,10 @@ import * as path from 'path';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  const prefix = '/api';
+  app.setGlobalPrefix(prefix);
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalFilters(new HttpExceptionFilter());
-
-  // http://localhost:8080/media/products/IMG_40271663419356372.JPG
 
   app.useStaticAssets(path.join(__dirname, './common', 'uploads'), {
     prefix: '/media',

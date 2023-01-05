@@ -29,11 +29,6 @@ export class UserController {
     return user;
   }
 
-  @Get(':id')
-  getUserProductData(@Param('id') id: number) {
-    return this.userService.getUserProductData(id);
-  }
-
   @Post('signup')
   async signUp(@Body() body: UsersRequestDto) {
     return this.userService.signUp(body);
@@ -75,14 +70,25 @@ export class UserController {
   }
 
   // accessToken refresh
-  // @UseGuards(JwtAuthGuard)
-  @Get('/refresh')
-  getCookies(
+  @Get('/refresh-token')
+  @UseGuards(JwtAuthGuard)
+  async getCookies(
     @Req() req: Request,
     @Res() res: Response,
     @CurrentUser() user,
-  ): any {
-    const jwt = req.cookies['refreshToken'];
-    return res.send(jwt);
+  ) {
+    const jwt = req.cookies['rjt'];
+
+    const accessToken = await this.authService.issueAJTByRJT(user, jwt);
+
+    res.cookie('ajt', accessToken.token, accessToken.options);
+    return res.send({
+      message: 'refresh Success',
+    });
+  }
+
+  @Get('/:id')
+  getUserProductData(@Param('id') id: number) {
+    return this.userService.getUserProductData(id);
   }
 }
