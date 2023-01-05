@@ -2,6 +2,7 @@ import { HttpException, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Notice } from '../entity/notice.entity';
+import { Inquiry } from '../entity/inquiry.entity';
 
 @Injectable()
 export class NoticeRepository {
@@ -9,6 +10,15 @@ export class NoticeRepository {
     @InjectRepository(Notice)
     private noticeRepository: Repository<Notice>,
   ) {}
+
+  async findAllNotice(): Promise<Notice[] | null> {
+    try {
+      const result = await this.noticeRepository.find();
+      return result;
+    } catch (error) {
+      throw new HttpException('db error', 400);
+    }
+  }
 
   async findNoticeByNid(nid): Promise<Notice | null> {
     try {

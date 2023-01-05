@@ -12,8 +12,4 @@ export class InquiryRequestDto {
   @IsNotEmpty()
   @IsString()
   content: string;
-
-  // null 가능
-  @IsString()
-  answer: string;
 }

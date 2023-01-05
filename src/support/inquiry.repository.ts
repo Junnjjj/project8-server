@@ -10,7 +10,44 @@ export class InquiryRepository {
     private inquiryRepository: Repository<Inquiry>,
   ) {}
 
-  async fineInquiryByIid(Iid): Promise<Inquiry | null> {
-    return;
+  async findAllInquiry(): Promise<Inquiry[] | null> {
+    try {
+      const result = await this.inquiryRepository.find();
+      return result;
+    } catch (error) {
+      throw new HttpException('db error', 400);
+    }
+  }
+
+  async findInquiryByIid(iid): Promise<Inquiry | null> {
+    try {
+      const result = await this.inquiryRepository.findOne({
+        where: { id: iid },
+      });
+      return result;
+    } catch (error) {
+      throw new HttpException('db error', 400);
+    }
+  }
+
+  async createInquiry(queryRunner, inquiry) {
+    return await queryRunner.manager.save(Inquiry, inquiry);
+  }
+
+  async createIAnswer(iid, answer, answerDate, authorityId) {
+    try {
+      await this.inquiryRepository
+        .createQueryBuilder('inquiry')
+        .update(Inquiry)
+        .set({
+          answer: answer,
+          answerDate: answerDate,
+          authorityId: authorityId,
+        })
+        .where('id = :iid', { iid: iid })
+        .execute();
+    } catch (error) {
+      throw new HttpException(error, 400);
+    }
   }
 }

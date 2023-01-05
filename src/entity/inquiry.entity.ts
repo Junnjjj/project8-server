@@ -30,21 +30,19 @@ export class Inquiry extends BaseEntity {
   @Column()
   content: string;
 
-  @Column()
+  @Column({ default: null })
   answer: string;
 
   @Column({
     type: 'timestamp',
+    default: null,
   })
   answerDate: Date;
-
-  @DeleteDateColumn()
-  deleteAt: Date;
 
   @Column({ name: 'userId' })
   userId: number;
 
-  @Column({ name: 'authorityId' })
+  @Column({ name: 'authorityId', default: null })
   authorityId: number;
 
   // 문의 등록한 유저
