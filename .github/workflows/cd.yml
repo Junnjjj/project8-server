@@ -1,27 +1,27 @@
-name: Deployment Workflow
-
-on:
-  pull_request:
-    branches: [ "develop" ]
-    types: [closed]
-
-jobs:
-  job_one:
-    name: Deploy
-    runs-on: ubuntu-latest
-    steps:
-      - name: dev Deployment into Jang server using ssh connection
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.P8_J_SERVER }}
-          username: jang
-          key: ${{ secrets.P8_J_SECRET }}
-          port: 22022
-          script: |
-            pm2 kill
-            cd node/project8-server
-            npm ci
-            git stash && git pull origin develop && git stash pop
-            git status
-            nest build
-            npm run start:prod
+#name: Deployment Workflow
+#
+#on:
+#  pull_request:
+#    branches: [ "develop" ]
+#    types: [closed]
+#
+#jobs:
+#  job_one:
+#    name: Deploy
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: dev Deployment into Jang server using ssh connection
+#        uses: appleboy/ssh-action@master
+#        with:
+#          host: ${{ secrets.P8_J_SERVER }}
+#          username: jang
+#          key: ${{ secrets.P8_J_SECRET }}
+#          port: 22022
+#          script: |
+#            pm2 kill
+#            cd node/project8-server
+#            npm ci
+#            git stash && git pull origin develop && git stash pop
+#            git status
+#            nest build
+#            npm run start:prod

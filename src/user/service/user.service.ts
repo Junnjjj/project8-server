@@ -20,7 +20,7 @@ export class UserService {
   async getUserProductData(id: number) {
     const isUserExist = await this.userRepository.findUserById(id);
     if (!isUserExist) {
-      throw new HttpException('해당하는 유저가 존재하지 않습니다..', 401);
+      throw new HttpException('해당하는 유저가 존재하지 않습니다..', 400);
     }
     const user = await this.userRepository.findUserByIdWithoutPassword(id);
 

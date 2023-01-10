@@ -117,13 +117,6 @@ export class AuthService {
     return AccessToken;
   }
 
-  setJwtCookie(token, res) {
-    res.cookie('refreshToken', token.token, {
-      httpOnly: true,
-      maxAge: 24 * 60 * 60 * 1000, //1 day
-    });
-  }
-
   deleteJwtCookie(res) {
     res.cookie('ajt', '', {
       domain: process.env.MODE === 'DEV' ? 'localhost' : process.env.DOMAIN_URL,

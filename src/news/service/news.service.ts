@@ -43,6 +43,7 @@ export class NewsService {
     const {
       title,
       subTitle,
+      category,
       description,
       openDate,
       price,
@@ -60,6 +61,7 @@ export class NewsService {
         authorityId,
         title,
         subTitle,
+        category,
         description,
         openDate,
         price,
@@ -132,7 +134,7 @@ export class NewsService {
       });
 
     if (!isMyComment) {
-      throw new HttpException('댓글의 사용자가 아닙니다.', 401);
+      throw new HttpException('댓글의 사용자가 아닙니다.', 400);
     }
 
     return await this.newsCommentRepository.deleteComment(commentId);

@@ -40,18 +40,6 @@ import { NewsFavorite } from './entity/NewsFavorite.entity';
 import { QnaReport } from './entity/qnaReport.entity';
 import { authenticate } from './authenticate_admin';
 
-// const DEFAULT_ADMIN = {
-//   email: 'admin@example.com',
-//   password: '123123',
-// };
-//
-// const authenticate = async (email: string, password: string) => {
-//   if (email === DEFAULT_ADMIN.email && password === DEFAULT_ADMIN.password) {
-//     return Promise.resolve(DEFAULT_ADMIN);
-//   }
-//   return null;
-// };
-
 AdminJS.registerAdapter({
   Resource: AdminJSTypeorm.Resource,
   Database: AdminJSTypeorm.Database,

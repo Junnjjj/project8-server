@@ -30,16 +30,20 @@ export class News extends BaseEntity {
   @Column()
   subTitle: string;
 
-  @Column({ length: 2000 })
+  @Column()
+  category: string;
+
+  @Column({ length: 5000 })
   description: string;
 
-  @Column()
-  openDate: string;
+  // 오픈 일
+  @Column({ nullable: true })
+  openDate: Date;
 
   @Column()
   price: string;
 
-  @UpdateDateColumn({ type: 'timestamp' })
+  @UpdateDateColumn()
   updated_at: Date;
 
   @Column({ name: 'authorityId' })
