@@ -10,6 +10,8 @@ import {
 } from 'typeorm';
 import { User } from './user.entity';
 import { News } from './news.entity';
+import { Inquiry } from './inquiry.entity';
+import { Notice } from './notice.entity';
 
 @Entity()
 export class UserAuthority extends BaseEntity {
@@ -29,4 +31,10 @@ export class UserAuthority extends BaseEntity {
 
   @OneToMany(() => News, (news) => news.userAuthority)
   news: News[];
+
+  @OneToMany(() => Inquiry, (inquiry) => inquiry.userAuthority)
+  inquiries: Inquiry[];
+
+  @OneToMany(() => Notice, (notice) => notice.userAuthority)
+  notices: Notice[];
 }
