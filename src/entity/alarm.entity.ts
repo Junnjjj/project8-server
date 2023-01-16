@@ -24,7 +24,7 @@ export class Alarm extends BaseEntity {
   readAlarm: boolean;
 
   @Column({ name: 'productId' })
-  productId: string;
+  productId: number;
 
   @DeleteDateColumn()
   deleteAt: Date;

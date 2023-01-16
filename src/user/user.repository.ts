@@ -90,7 +90,6 @@ export class UserRepository {
       const user = await this.usersRepository.findOne({
         where: { loginId },
       });
-      console.log(user);
       await this.usersRepository.save({
         ...user,
         currentHashedRefreshToken: null,

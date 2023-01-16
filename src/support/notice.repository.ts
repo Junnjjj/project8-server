@@ -13,7 +13,11 @@ export class NoticeRepository {
 
   async findAllNotice(): Promise<Notice[] | null> {
     try {
-      const result = await this.noticeRepository.find();
+      const result = await this.noticeRepository.find({
+        order: {
+          createDate: 'DESC',
+        },
+      });
       return result;
     } catch (error) {
       throw new HttpException('db error', 400);

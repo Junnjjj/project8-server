@@ -43,6 +43,7 @@ export class ProductService {
 
     const {
       eType,
+      pType,
       name,
       description,
       startPrice,
@@ -64,6 +65,7 @@ export class ProductService {
       const newProduct = await this.productRepository.createPost(queryRunner, {
         createdDate,
         eType,
+        pType,
         name,
         description,
         startPrice,

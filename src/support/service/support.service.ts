@@ -60,7 +60,7 @@ export class SupportService {
     const noticeWriter = await this.noticeRepository.findNoticeByNid(nid);
 
     if (authorityId != noticeWriter.authorityId) {
-      throw new HttpException('공지사항의 작성자가 아닙니다.', 401);
+      throw new HttpException('공지사항의 작성자가 아닙니다.', 400);
     }
 
     const { title, content } = body;
@@ -74,7 +74,7 @@ export class SupportService {
     const noticeWriter = await this.noticeRepository.findNoticeByNid(nid);
 
     if (authorityId != noticeWriter.authorityId) {
-      throw new HttpException('공지사항의 작성자가 아닙니다.', 401);
+      throw new HttpException('공지사항의 작성자가 아닙니다.', 400);
     }
 
     return await this.noticeRepository.deleteNotice(nid);

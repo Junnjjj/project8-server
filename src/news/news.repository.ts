@@ -17,7 +17,7 @@ export class NewsRepository {
         .createQueryBuilder('news')
         .leftJoinAndSelect('news.newsFiles', 'newsFile')
         .leftJoinAndSelect('news.newsFavorites', 'favorite')
-        .where({ id: newsId })
+        .where({ slug: newsId })
         .getOne();
       return news;
     } catch (error) {
@@ -37,6 +37,7 @@ export class NewsRepository {
         .leftJoinAndSelect('news.newsFavorites', 'favorite')
         .select([
           'news.id as id',
+          'news.slug as slug',
           'news.title as title',
           'news.subTitle as subTitle',
           'news.openDate as openDate',
@@ -44,6 +45,7 @@ export class NewsRepository {
         ])
         .addSelect('COUNT(favorite.id) as favorite')
         .groupBy('news.id')
+        .orderBy({ 'news.createDate': 'DESC' })
         .limit(limit)
         .offset(skip)
         .getRawMany();

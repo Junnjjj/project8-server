@@ -116,7 +116,7 @@ export class QnaService {
       id,
     });
     if (!isMyQna) {
-      throw new HttpException('Qna의 사용자가 아닙니다.', 401);
+      throw new HttpException('Qna의 사용자가 아닙니다.', 400);
     }
 
     return await this.qnaRepository.updateQna(id, content);
@@ -129,7 +129,7 @@ export class QnaService {
       id,
     });
     if (!isMyQna) {
-      throw new HttpException('Qna의 사용자가 아닙니다.', 401);
+      throw new HttpException('Qna의 사용자가 아닙니다.', 400);
     }
 
     return await this.qnaRepository.deleteQna(id);

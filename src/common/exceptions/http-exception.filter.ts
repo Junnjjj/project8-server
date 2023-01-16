@@ -22,6 +22,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
         success: false,
         timestamp: new Date().toISOString(),
         path: request.url,
+        statusCode: status,
         error,
       });
     } else {
@@ -29,6 +30,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
         success: false,
         timestamp: new Date().toISOString(),
         path: request.url,
+        statusCode: status,
         ...error,
       });
     }

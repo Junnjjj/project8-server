@@ -16,7 +16,6 @@ export class UserAuthorityRepository {
         userId: userId,
         authorityName: auth,
       });
-      console.log(userAuthority);
       return userAuthority;
     } catch (error) {
       throw new HttpException(error, 400);

@@ -15,14 +15,12 @@ export class UserProfileRepository {
     try {
       const url =
         process.env.MODE === 'DEV'
-          ? 'http://localhost:8080'
-          : process.env.ORIGIN;
-
-      const imgUrl = `${url}/media/icons/logo.png`;
+          ? 'http://localhost:8080/media/icons/logo.png'
+          : process.env.GCP_URL + '/utils/user.png';
 
       const profile = await this.userProfileRepository.save({
         tel,
-        photoImg: imgUrl,
+        photoImg: url,
       });
       return profile;
     } catch (error) {
