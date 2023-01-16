@@ -25,8 +25,13 @@ export class Product extends BaseEntity {
   })
   createdDate: Date;
 
+  // Auction 종류
   @Column()
   eType: number;
+
+  // 물건 카테고리 유형
+  @Column()
+  pType: number;
 
   @Column()
   name: string;

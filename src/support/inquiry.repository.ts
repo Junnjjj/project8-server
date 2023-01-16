@@ -12,7 +12,11 @@ export class InquiryRepository {
 
   async findAllInquiry(): Promise<Inquiry[] | null> {
     try {
-      const result = await this.inquiryRepository.find();
+      const result = await this.inquiryRepository.find({
+        order: {
+          createDate: 'DESC',
+        },
+      });
       return result;
     } catch (error) {
       throw new HttpException('db error', 400);

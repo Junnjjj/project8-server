@@ -4,6 +4,7 @@ import { NewsFileRepository } from '../newsFile.repository';
 import { DataSource } from 'typeorm';
 import { NewsCommentRepository } from '../newsComment.repository';
 import { UserRepository } from '../../user/user.repository';
+import { idGenerator } from '../../common/utils/unique.generator';
 
 @Injectable()
 export class NewsService {
@@ -23,6 +24,8 @@ export class NewsService {
         const newsId = newsItem.id;
         const img = await this.newsFileRepository.getOneImg(newsId);
         newsItem['mainUrl'] = img;
+
+        delete newsItem.id;
       }
     }
     return newsList;
@@ -39,6 +42,7 @@ export class NewsService {
 
   async createNews(body, role) {
     const authorityId = role.id;
+    const urlCode = idGenerator();
 
     const {
       title,
@@ -59,6 +63,7 @@ export class NewsService {
       // 1. News 생성
       const newNews = await this.newsRepository.createNews(queryRunner, {
         authorityId,
+        slug: urlCode,
         title,
         subTitle,
         category,

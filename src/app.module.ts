@@ -77,7 +77,7 @@ AdminJS.registerAdapter({
         },
         auth: {
           authenticate,
-          cookieName: 'adminjs',
+          cookieName: 'adjt',
           cookiePassword: 'secret',
         },
         sessionOptions: {
@@ -91,7 +91,7 @@ AdminJS.registerAdapter({
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: process.env.DB_HOST,
-      port: 3306,
+      port: Number(process.env.DB_PORT),
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWD,
       database: process.env.DB_DATABASE,

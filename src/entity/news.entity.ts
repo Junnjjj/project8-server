@@ -3,6 +3,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  Index,
   JoinColumn,
   ManyToOne,
   OneToMany,
@@ -32,6 +33,11 @@ export class News extends BaseEntity {
 
   @Column()
   category: string;
+
+  // 외부 노출용 ID
+  @Column()
+  @Index()
+  slug: string;
 
   @Column({ length: 5000 })
   description: string;
