@@ -26,6 +26,10 @@ export class SupportService {
     return await this.inquiryRepository.findAllInquiry();
   }
 
+  async findMyInquiry(userId): Promise<Inquiry[] | null> {
+    return await this.inquiryRepository.findMyInquiry(userId);
+  }
+
   async createNotice(body, role) {
     const authorityId = role.id;
 

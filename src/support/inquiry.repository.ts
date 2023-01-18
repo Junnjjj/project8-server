@@ -23,6 +23,22 @@ export class InquiryRepository {
     }
   }
 
+  async findMyInquiry(userId): Promise<Inquiry[] | null> {
+    try {
+      const result = await this.inquiryRepository.find({
+        where: {
+          userId: userId,
+        },
+        order: {
+          createDate: 'DESC',
+        },
+      });
+      return result;
+    } catch (error) {
+      throw new HttpException('db error', 400);
+    }
+  }
+
   async findInquiryByIid(iid): Promise<Inquiry | null> {
     try {
       const result = await this.inquiryRepository.findOne({

@@ -36,6 +36,12 @@ export class SupportController {
     return this.supportService.findAllInquiry();
   }
 
+  @Get('/inquiry/my')
+  @UseGuards(JwtAuthGuard)
+  async showMyInquiry(@CurrentUser() user: User): Promise<Inquiry[] | null> {
+    return this.supportService.findMyInquiry(user.id);
+  }
+
   @Post('/notice')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(RoleType.ADMIN)
