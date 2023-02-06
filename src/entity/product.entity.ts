@@ -69,6 +69,9 @@ export class Product extends BaseEntity {
   @Column({ name: 'userId' })
   userId: number;
 
+  @Column({ default: 0 })
+  visitors: number;
+
   // product 판매자
   @ManyToOne(() => User, (user) => user.products)
   @JoinColumn({ name: 'userId' })

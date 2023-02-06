@@ -20,10 +20,14 @@ import {
   FilesInterceptor,
 } from '@nestjs/platform-express';
 import { multerOptions } from '../../common/utils/multer.options';
+import { CacheService } from '../../cache/cache.service';
 
 @Controller('product')
 export class ProductController {
-  constructor(private readonly productsService: ProductService) {}
+  constructor(
+    private readonly productsService: ProductService,
+    private readonly cacheService: CacheService,
+  ) {}
 
   @Get()
   async showAllProducts(): Promise<Product[]> {
@@ -41,6 +45,8 @@ export class ProductController {
 
   @Get(':id')
   showProduct(@Param('id') id: number): Promise<Product> {
+    //조회수 증가
+    this.cacheService.setVisitor(id);
     return this.productsService.showOneProduct(id);
   }
 

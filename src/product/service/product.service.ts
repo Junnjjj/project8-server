@@ -74,6 +74,7 @@ export class ProductService {
         bidUnit,
         endTime: endDateTime,
         userId: userId,
+        visitors: 0,
       });
 
       // 2. 이미지 파일들 외래키 설정
@@ -117,5 +118,13 @@ export class ProductService {
   async saveProductImg(file, productName) {
     //  save img url to Database
     return await this.productFileRepository.saveProductImg(file, productName);
+  }
+
+  async setVisitors(productId, visitors) {
+    await this.productRepository.setVisitors(productId, visitors);
+  }
+
+  async getVisitors(productId) {
+    await this.productRepository.getVisitors(productId);
   }
 }
