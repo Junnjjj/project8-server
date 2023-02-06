@@ -1,5 +1,5 @@
-import { HttpException, Inject, Injectable, Logger } from '@nestjs/common';
-import { SchedulerRegistry } from '@nestjs/schedule';
+import {forwardRef, HttpException, Inject, Injectable, Logger} from '@nestjs/common';
+import { Cron, SchedulerRegistry } from '@nestjs/schedule';
 import { CronJob } from 'cron';
 import { ProductRepository } from '../../product/product.repository';
 import { UserProfileRepository } from '../../user/userProfile.repository';
@@ -7,6 +7,7 @@ import { DataSource } from 'typeorm';
 import { UserRepository } from '../../user/user.repository';
 import { BiddingLogRepository } from '../../bid/biddingLog.repository';
 import { AlarmRepository } from '../../alarm/alarm.repository';
+import { CacheService } from '../../cache/cache.service';
 
 @Injectable()
 export class CronService {
@@ -17,6 +18,8 @@ export class CronService {
     private readonly userRepository: UserRepository,
     private readonly userProfileRepository: UserProfileRepository,
     private readonly alarmRepository: AlarmRepository,
+    @Inject(forwardRef(() => CacheService))
+    private readonly cacheService: CacheService,
     private dataSource: DataSource,
   ) {}
 
@@ -130,6 +133,17 @@ export class CronService {
         const endDateTime = new Date(product.endTime);
         await this.addBiddingEndCronJob(product.id.toString(), endDateTime);
       }
+    }
+  }
+
+  @Cron('0 0 * * * *') // 매시 0분마다 업데이트ㄷ
+  async updateMysqlFromRedis() {
+    this.logger.debug(`Update visitors data to mysql from redis`);
+    try {
+      // 레디스에 저장된 조회수를 mysql에 업데이트
+      await this.cacheService.updateAllVisitors();
+    } catch (err) {
+      throw new HttpException('트랜잭션 에러 발생', 400);
     }
   }
 }

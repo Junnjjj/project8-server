@@ -68,4 +68,23 @@ export class NewsRepository {
       throw new HttpException(error, 400);
     }
   }
+  async setVisitors(newsId, visitors) {
+    try {
+      await this.newsRepository.update(
+        { slug: newsId },
+        { visitors: visitors },
+      );
+    } catch (error) {
+      throw new HttpException('db error', 400);
+    }
+  }
+
+  async getVisitors(newsId) {
+    try {
+      const result = await this.findNewsById(newsId);
+      return result.visitors;
+    } catch (error) {
+      throw new HttpException('db error', 400);
+    }
+  }
 }

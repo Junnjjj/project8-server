@@ -1,10 +1,11 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import {forwardRef, HttpException, Inject, Injectable} from '@nestjs/common';
 import { NewsRepository } from '../news.repository';
 import { NewsFileRepository } from '../newsFile.repository';
 import { DataSource } from 'typeorm';
 import { NewsCommentRepository } from '../newsComment.repository';
 import { UserRepository } from '../../user/user.repository';
 import { idGenerator } from '../../common/utils/unique.generator';
+import { CacheService } from '../../cache/cache.service';
 
 @Injectable()
 export class NewsService {
@@ -14,6 +15,8 @@ export class NewsService {
     private readonly newsCommentRepository: NewsCommentRepository,
     private readonly userRepository: UserRepository,
     private dataSource: DataSource,
+    @Inject(forwardRef(() => CacheService))
+    private readonly cacheService: CacheService,
   ) {}
 
   async showNewsByPage(page, limit) {
@@ -37,6 +40,7 @@ export class NewsService {
     delete news.newsFavorites;
     news['favorite'] = favoritesLength;
 
+    await this.cacheService.setNewsVisitor(newsId); //조회수 증가
     return news;
   }
 
@@ -70,6 +74,7 @@ export class NewsService {
         description,
         openDate,
         price,
+        visitors: 0,
       });
 
       // 2. 이미지 파일들 외래키 설정
@@ -143,5 +148,13 @@ export class NewsService {
     }
 
     return await this.newsCommentRepository.deleteComment(commentId);
+  }
+
+  async setVisitors(newsId, visitors) {
+    await this.newsRepository.setVisitors(newsId, visitors);
+  }
+
+  async getVisitors(newsId) {
+    await this.newsRepository.getVisitors(newsId);
   }
 }

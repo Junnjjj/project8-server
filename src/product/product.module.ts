@@ -19,7 +19,7 @@ import { CacheModule } from '../cache/cache.module';
     UserModule,
     TypeOrmModule.forFeature([Product, ProductFile]),
     forwardRef(() => CronModule),
-    forwardRef(()=> CacheModule),
+    forwardRef(() => CacheModule),
   ],
   providers: [ProductService, ProductRepository, ProductFileRepository],
   controllers: [ProductController],

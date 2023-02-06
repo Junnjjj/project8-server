@@ -1,4 +1,4 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { forwardRef, HttpException, Inject, Injectable } from '@nestjs/common';
 import { ProductRepository } from '../product.repository';
 import { ProductRequestDto } from '../dto/product.request.dto';
 import { User } from '../../entity/user.entity';
@@ -7,6 +7,7 @@ import { CronService } from '../../common/scheduler/cron.service';
 import { UserProfileRepository } from '../../user/userProfile.repository';
 import { DataSource } from 'typeorm';
 import { UserRepository } from '../../user/user.repository';
+import { CacheService } from '../../cache/cache.service';
 
 @Injectable()
 export class ProductService {
@@ -15,7 +16,10 @@ export class ProductService {
     private readonly productFileRepository: ProductFileRepository,
     private readonly userRepository: UserRepository,
     private readonly userProfileRepository: UserProfileRepository,
+    @Inject(forwardRef(() => CronService))
     private readonly cronService: CronService,
+    @Inject(forwardRef(() => CacheService))
+    private readonly cacheService: CacheService,
     private dataSource: DataSource,
   ) {}
 
@@ -35,6 +39,7 @@ export class ProductService {
 
   async showOneProduct(productId) {
     const product = await this.productRepository.findProductById(productId);
+    await this.cacheService.setProductVisitor(productId); //조회수 증가
     return product;
   }
 
