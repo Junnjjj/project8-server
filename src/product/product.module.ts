@@ -9,6 +9,7 @@ import { Product } from '../entity/product.entity';
 import { ProductFileRepository } from './productFile.repository';
 import { CronModule } from '../common/scheduler/cron.module';
 import { UserModule } from '../user/user.module';
+import { CacheModule } from '../cache/cache.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { UserModule } from '../user/user.module';
     UserModule,
     TypeOrmModule.forFeature([Product, ProductFile]),
     forwardRef(() => CronModule),
+    forwardRef(() => CacheModule),
   ],
   providers: [ProductService, ProductRepository, ProductFileRepository],
   controllers: [ProductController],

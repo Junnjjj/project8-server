@@ -249,4 +249,20 @@ export class ProductRepository {
       throw new HttpException(error, 400);
     }
   }
+  async setVisitors(productId, visitors) {
+    try {
+      await this.productRepository.update(productId, { visitors: visitors });
+    } catch (error) {
+      throw new HttpException('db error', 400);
+    }
+  }
+
+  async getVisitors(productId) {
+    try {
+      const result = await this.findProductPId(productId);
+      return result.visitors;
+    } catch (error) {
+      throw new HttpException('db error', 400);
+    }
+  }
 }

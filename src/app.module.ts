@@ -42,6 +42,7 @@ import { NewsFavorite } from './entity/NewsFavorite.entity';
 import { QnaReport } from './entity/qnaReport.entity';
 import { SupportModule } from './support/support.module';
 import { authenticate } from './authenticate_admin';
+import { CacheModule } from './cache/cache.module';
 
 AdminJS.registerAdapter({
   Resource: AdminJSTypeorm.Resource,
@@ -135,6 +136,7 @@ AdminJS.registerAdapter({
     ReportModule,
     QnaModule,
     SupportModule,
+    CacheModule,
   ],
   controllers: [AppController],
   providers: [AppService],

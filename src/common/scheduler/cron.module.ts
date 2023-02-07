@@ -4,6 +4,7 @@ import { ProductModule } from '../../product/product.module';
 import { UserModule } from '../../user/user.module';
 import { BidModule } from '../../bid/bid.module';
 import { AlarmModule } from '../../alarm/alarm.module';
+import { CacheModule } from '../../cache/cache.module';
 
 @Module({
   imports: [
@@ -11,6 +12,7 @@ import { AlarmModule } from '../../alarm/alarm.module';
     BidModule,
     AlarmModule,
     forwardRef(() => ProductModule),
+    CacheModule,
   ],
   providers: [CronService],
   exports: [CronService],
