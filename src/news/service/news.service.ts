@@ -1,4 +1,4 @@
-import {forwardRef, HttpException, Inject, Injectable} from '@nestjs/common';
+import { forwardRef, HttpException, Inject, Injectable } from '@nestjs/common';
 import { NewsRepository } from '../news.repository';
 import { NewsFileRepository } from '../newsFile.repository';
 import { DataSource } from 'typeorm';
