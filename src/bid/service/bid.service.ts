@@ -33,7 +33,7 @@ export class BidService {
       productId,
     );
     if (!checkActiveProduct) {
-      throw new HttpException('입찰이 종료된 상품입니다', 401);
+      throw new HttpException('입찰이 종료된 상품입니다', 400);
     }
 
     //2. 자기 자신 물품인지 확인,
@@ -42,7 +42,7 @@ export class BidService {
       userId,
     });
     if (isProductSeller) {
-      throw new HttpException('자신의 물품은 입찰할 수 없습니다', 401);
+      throw new HttpException('자신의 물품은 입찰할 수 없습니다', 400);
     }
 
     // 3. 이전 입찰이 자기 자신인지 확인
@@ -51,7 +51,7 @@ export class BidService {
       userId,
     });
     if (prevBidIsMine) {
-      throw new HttpException('연달아 입찰하실 수 없습니다.', 401);
+      throw new HttpException('연달아 입찰하실 수 없습니다.', 400);
     }
 
     // 4. bidding 가격이 nowPrice 보다 큰지 확인
@@ -60,7 +60,7 @@ export class BidService {
       biddingPrice: price,
     });
     if (!checkBiddingPrice) {
-      throw new HttpException('앞선 입찰이 존재합니다.', 401);
+      throw new HttpException('앞선 입찰이 존재합니다.', 400);
     }
 
     // (추가-alarm) 앞선 입찰이 존재하면 => 앞선입찰 사용자에게 alarm 생성

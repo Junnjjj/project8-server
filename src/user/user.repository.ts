@@ -92,7 +92,7 @@ export class UserRepository {
       });
       await this.usersRepository.save({
         ...user,
-        currentHashedRefreshToken: '',
+        currentHashedRefreshToken: null,
       });
     } catch (error) {
       throw new HttpException('db error', 400);

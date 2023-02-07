@@ -19,7 +19,7 @@ export class NewsCommentReportRepository {
 
       return report ? true : false;
     } catch (error) {
-      throw new HttpException(error, 400);
+      throw new HttpException('db error', 400);
     }
   }
 
@@ -31,7 +31,7 @@ export class NewsCommentReportRepository {
       });
       return result;
     } catch (error) {
-      throw new HttpException(error, 400);
+      throw new HttpException('db error', 400);
     }
   }
 }

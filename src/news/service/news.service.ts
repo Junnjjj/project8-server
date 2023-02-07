@@ -1,9 +1,11 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { forwardRef, HttpException, Inject, Injectable } from '@nestjs/common';
 import { NewsRepository } from '../news.repository';
 import { NewsFileRepository } from '../newsFile.repository';
 import { DataSource } from 'typeorm';
 import { NewsCommentRepository } from '../newsComment.repository';
 import { UserRepository } from '../../user/user.repository';
+import { idGenerator } from '../../common/utils/unique.generator';
+import { CacheService } from '../../cache/cache.service';
 
 @Injectable()
 export class NewsService {
@@ -13,16 +15,24 @@ export class NewsService {
     private readonly newsCommentRepository: NewsCommentRepository,
     private readonly userRepository: UserRepository,
     private dataSource: DataSource,
+    @Inject(forwardRef(() => CacheService))
+    private readonly cacheService: CacheService,
   ) {}
 
-  async showNewsByPage(page, limit) {
-    const newsList = await this.newsRepository.findNewsByPage(page, limit);
+  async showNewsByPage(page, limit, order) {
+    const newsList = await this.newsRepository.findNewsByPage(
+      page,
+      limit,
+      order,
+    );
 
     if (newsList.length !== 0) {
       for (const newsItem of newsList) {
         const newsId = newsItem.id;
         const img = await this.newsFileRepository.getOneImg(newsId);
         newsItem['mainUrl'] = img;
+
+        delete newsItem.id;
       }
     }
     return newsList;
@@ -34,15 +44,18 @@ export class NewsService {
     delete news.newsFavorites;
     news['favorite'] = favoritesLength;
 
+    await this.cacheService.setNewsVisitor(newsId); //조회수 증가
     return news;
   }
 
   async createNews(body, role) {
     const authorityId = role.id;
+    const urlCode = idGenerator();
 
     const {
       title,
       subTitle,
+      category,
       description,
       openDate,
       price,
@@ -58,11 +71,14 @@ export class NewsService {
       // 1. News 생성
       const newNews = await this.newsRepository.createNews(queryRunner, {
         authorityId,
+        slug: urlCode,
         title,
         subTitle,
+        category,
         description,
         openDate,
         price,
+        visitors: 0,
       });
 
       // 2. 이미지 파일들 외래키 설정
@@ -132,9 +148,17 @@ export class NewsService {
       });
 
     if (!isMyComment) {
-      throw new HttpException('댓글의 사용자가 아닙니다.', 401);
+      throw new HttpException('댓글의 사용자가 아닙니다.', 400);
     }
 
     return await this.newsCommentRepository.deleteComment(commentId);
+  }
+
+  async setVisitors(newsId, visitors) {
+    await this.newsRepository.setVisitors(newsId, visitors);
+  }
+
+  async getVisitors(newsId) {
+    await this.newsRepository.getVisitors(newsId);
   }
 }

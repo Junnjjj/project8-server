@@ -1,4 +1,8 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  HttpException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { UserRepository } from '../user/user.repository';
 import { LoginRequestDto } from './dto/login.request.dto';
 import { User } from '../entity/user.entity';
@@ -87,11 +91,30 @@ export class AuthService {
     };
   }
 
-  setJwtCookie(token, res) {
-    res.cookie('refreshToken', token.token, {
-      httpOnly: true,
-      maxAge: 24 * 60 * 60 * 1000, //1 day
-    });
+  // accessToken 재발급
+  async issueAJTByRJT(user, jwt) {
+    const userId = user.id;
+    const refreshToken = jwt;
+
+    const userInfo = await this.userRepository.findUserById(userId);
+    const hashedRefreshToken = userInfo.currentHashedRefreshToken;
+
+    const isJWTValidated: boolean = await bcrypt.compare(
+      refreshToken,
+      hashedRefreshToken,
+    );
+
+    if (!isJWTValidated) {
+      throw new HttpException('적합한 사용자가 아닙니다.', 400);
+    }
+
+    const AccessToken = this.getCookieWithJwtAccessToken(
+      user.email,
+      user.id,
+      user.authorities,
+    );
+
+    return AccessToken;
   }
 
   deleteJwtCookie(res) {

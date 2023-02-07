@@ -54,6 +54,8 @@ export class ProductRepository {
           'biddingLog',
           'biddingLog.productId = product.id',
         )
+        .leftJoinAndSelect('product.productFavorites', 'favorite')
+        .leftJoinAndSelect('product.qnas', 'comment')
         .select([
           'product.id as id',
           'product.name as name',
@@ -64,6 +66,9 @@ export class ProductRepository {
           'user.id as userId',
         ])
         .addSelect('COUNT(biddingLog.id) AS biddingCount')
+        .addSelect('COUNT(favorite.id) AS favorite')
+        .addSelect('COUNT(comment.id) AS comment')
+        .loadRelationCountAndMap('product.favorite', 'product.productFavorites')
         .where({ active: true })
         .andWhere('product.eType IN (:aType)', { aType: aType })
         .groupBy('product.id')
@@ -247,6 +252,22 @@ export class ProductRepository {
       return result;
     } catch (error) {
       throw new HttpException(error, 400);
+    }
+  }
+  async setVisitors(productId, visitors) {
+    try {
+      await this.productRepository.update(productId, { visitors: visitors });
+    } catch (error) {
+      throw new HttpException('db error', 400);
+    }
+  }
+
+  async getVisitors(productId) {
+    try {
+      const result = await this.findProductPId(productId);
+      return result.visitors;
+    } catch (error) {
+      throw new HttpException('db error', 400);
     }
   }
 }

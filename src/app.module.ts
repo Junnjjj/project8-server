@@ -22,6 +22,8 @@ import { AlarmModule } from './alarm/alarm.module';
 import { Alarm } from './entity/alarm.entity';
 import { QnaModule } from './qna/qna.module';
 import { Qna } from './entity/qna.entity';
+import { Notice } from './entity/notice.entity';
+import { Inquiry } from './entity/inquiry.entity';
 
 import { AdminModule } from '@adminjs/nestjs';
 import * as AdminJSTypeorm from '@adminjs/typeorm';
@@ -37,18 +39,10 @@ import { NewsCommentFavorite } from './entity/newsCommentFavorite.entity';
 import { NewsCommentReport } from './entity/newsCommentReport.entity';
 import { ReportModule } from './report/report.module';
 import { NewsFavorite } from './entity/NewsFavorite.entity';
-
-const DEFAULT_ADMIN = {
-  email: 'admin@example.com',
-  password: '123123',
-};
-
-const authenticate = async (email: string, password: string) => {
-  if (email === DEFAULT_ADMIN.email && password === DEFAULT_ADMIN.password) {
-    return Promise.resolve(DEFAULT_ADMIN);
-  }
-  return null;
-};
+import { QnaReport } from './entity/qnaReport.entity';
+import { SupportModule } from './support/support.module';
+import { authenticate } from './authenticate_admin';
+import { CacheModule } from './cache/cache.module';
 
 AdminJS.registerAdapter({
   Resource: AdminJSTypeorm.Resource,
@@ -77,11 +71,14 @@ AdminJS.registerAdapter({
             NewsCommentReport,
             NewsFavorite,
             Qna,
+            QnaReport,
+            Notice,
+            Inquiry,
           ],
         },
         auth: {
           authenticate,
-          cookieName: 'adminjs',
+          cookieName: 'adjt',
           cookiePassword: 'secret',
         },
         sessionOptions: {
@@ -95,7 +92,7 @@ AdminJS.registerAdapter({
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: process.env.DB_HOST,
-      port: 3306,
+      port: Number(process.env.DB_PORT),
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWD,
       database: process.env.DB_DATABASE,
@@ -115,10 +112,13 @@ AdminJS.registerAdapter({
         NewsCommentReport,
         NewsFavorite,
         Qna,
+        QnaReport,
+        Notice,
+        Inquiry,
       ],
       logging: ['warn', 'error'],
       synchronize: false,
-      migrations: [Alarm],
+      migrations: [],
       migrationsTableName: 'custom_migration_table',
     }),
     UserModule,
@@ -135,6 +135,8 @@ AdminJS.registerAdapter({
     MediaModule,
     ReportModule,
     QnaModule,
+    SupportModule,
+    CacheModule,
   ],
   controllers: [AppController],
   providers: [AppService],

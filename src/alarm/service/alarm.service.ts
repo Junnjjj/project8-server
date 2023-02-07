@@ -29,7 +29,7 @@ export class AlarmService {
       id,
     });
     if (!isMyAlarm) {
-      throw new HttpException('알람의 사용자가 아닙니다.', 401);
+      throw new HttpException('알람의 사용자가 아닙니다.', 400);
     }
 
     return await this.alarmRepository.updateReadAlarm(id);
@@ -42,7 +42,7 @@ export class AlarmService {
       id,
     });
     if (!isMyAlarm) {
-      throw new HttpException('알람의 사용자가 아닙니다.', 401);
+      throw new HttpException('알람의 사용자가 아닙니다.', 400);
     }
 
     return await this.alarmRepository.deleteAlarm(id);

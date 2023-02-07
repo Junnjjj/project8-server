@@ -13,6 +13,10 @@ export class ProductRequestDto {
   eType: number;
 
   @IsNotEmpty()
+  @IsNumber()
+  pType: number;
+
+  @IsNotEmpty()
   @IsString()
   name: string;
 

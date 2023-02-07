@@ -68,9 +68,11 @@ export class NewsFileRepository {
         .createQueryBuilder('newsFile')
         .where('newsFile.newsId = :newsID', { newsID: newsId })
         .getOne();
-      return result.imgURL;
+      return result?.imgURL;
     } catch (error) {
-      throw new HttpException(error, 400);
+      throw new HttpException('db error', 400, {
+        cause: new Error('Some Error'),
+      });
     }
   }
 }

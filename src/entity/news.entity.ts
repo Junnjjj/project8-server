@@ -3,6 +3,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  Index,
   JoinColumn,
   ManyToOne,
   OneToMany,
@@ -30,20 +31,32 @@ export class News extends BaseEntity {
   @Column()
   subTitle: string;
 
-  @Column({ length: 2000 })
+  @Column()
+  category: string;
+
+  // 외부 노출용 ID
+  @Column()
+  @Index()
+  slug: string;
+
+  @Column({ length: 5000 })
   description: string;
 
-  @Column()
-  openDate: string;
+  // 오픈 일
+  @Column({ nullable: true })
+  openDate: Date;
 
   @Column()
   price: string;
 
-  @UpdateDateColumn({ type: 'timestamp' })
+  @UpdateDateColumn()
   updated_at: Date;
 
   @Column({ name: 'authorityId' })
   authorityId: number;
+
+  @Column({ default: 0 })
+  visitors: number;
 
   // news 작성자(Authority)
   @ManyToOne(() => UserAuthority, (userAuthority) => userAuthority.news)

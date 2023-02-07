@@ -25,13 +25,18 @@ export class Product extends BaseEntity {
   })
   createdDate: Date;
 
+  // Auction 종류
   @Column()
   eType: number;
+
+  // 물건 카테고리 유형
+  @Column()
+  pType: number;
 
   @Column()
   name: string;
 
-  @Column()
+  @Column({ length: 3000 })
   description: string;
 
   @Column()
@@ -63,6 +68,9 @@ export class Product extends BaseEntity {
 
   @Column({ name: 'userId' })
   userId: number;
+
+  @Column({ default: 0 })
+  visitors: number;
 
   // product 판매자
   @ManyToOne(() => User, (user) => user.products)
