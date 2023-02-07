@@ -16,8 +16,12 @@ export class NewsService {
     private dataSource: DataSource,
   ) {}
 
-  async showNewsByPage(page, limit) {
-    const newsList = await this.newsRepository.findNewsByPage(page, limit);
+  async showNewsByPage(page, limit, order) {
+    const newsList = await this.newsRepository.findNewsByPage(
+      page,
+      limit,
+      order,
+    );
 
     if (newsList.length !== 0) {
       for (const newsItem of newsList) {

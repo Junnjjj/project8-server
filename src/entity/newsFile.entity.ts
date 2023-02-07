@@ -24,6 +24,9 @@ export class NewsFile extends BaseEntity {
   @Column({ default: false })
   active: boolean;
 
-  @ManyToOne(() => News, (news) => news.newsFiles, { nullable: true })
+  @ManyToOne(() => News, (news) => news.newsFiles, {
+    nullable: true,
+    onDelete: 'CASCADE',
+  })
   news: News;
 }

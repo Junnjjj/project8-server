@@ -29,12 +29,14 @@ export class NewsRepository {
     return await queryRunner.manager.save(News, news);
   }
 
-  async findNewsByPage(page, limit) {
+  async findNewsByPage(page, limit, order) {
     const skip = (page - 1) * limit; // 스킵할 news 수
+    const sort = order === 'latest' ? 0 : 1;
     try {
       const newsList = await this.newsRepository
         .createQueryBuilder('news')
         .leftJoinAndSelect('news.newsFavorites', 'favorite')
+        .leftJoinAndSelect('news.newsComments', 'comment')
         .select([
           'news.id as id',
           'news.slug as slug',
@@ -42,17 +44,26 @@ export class NewsRepository {
           'news.subTitle as subTitle',
           'news.openDate as openDate',
           'news.price as price',
+          'news.createDate as createDate',
         ])
         .addSelect('COUNT(favorite.id) as favorite')
+        .addSelect('COUNT(comment.id) as comment')
         .groupBy('news.id')
-        .orderBy({ 'news.createDate': 'DESC' })
+        // .orderBy({ 'news.createDate': 'DESC' })
+        .orderBy(
+          sort === 0
+            ? { 'news.createDate': 'DESC' }
+            : { 'COUNT(comment.id) + COUNT(favorite.id)/0.5': 'DESC' },
+        )
         .limit(limit)
         .offset(skip)
         .getRawMany();
 
       return newsList;
     } catch (error) {
-      throw new HttpException(error, 400);
+      throw new HttpException(error, 400, {
+        cause: new Error('Some Error'),
+      });
     }
   }
 
