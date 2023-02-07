@@ -49,8 +49,12 @@ export class NewsController {
   }
 
   @Get('/findByFilter/?')
-  showNewsByPage(@Query('page') page: number, @Query('limit') limit: number) {
-    return this.newsService.showNewsByPage(page, limit);
+  showNewsByPage(
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+    @Query('order') order: string,
+  ) {
+    return this.newsService.showNewsByPage(page, limit, order);
   }
 
   @Get('/length')
