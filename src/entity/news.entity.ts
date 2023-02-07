@@ -55,6 +55,9 @@ export class News extends BaseEntity {
   @Column({ name: 'authorityId' })
   authorityId: number;
 
+  @Column({ default: 0 })
+  visitors: number;
+
   // news 작성자(Authority)
   @ManyToOne(() => UserAuthority, (userAuthority) => userAuthority.news)
   @JoinColumn({ name: 'authorityId' })
