@@ -1,4 +1,4 @@
-import { forwardRef, HttpException, Inject, Injectable } from '@nestjs/common';
+import {forwardRef, HttpException, Inject, Injectable} from '@nestjs/common';
 import { NewsRepository } from '../news.repository';
 import { NewsFileRepository } from '../newsFile.repository';
 import { DataSource } from 'typeorm';
@@ -23,9 +23,12 @@ export class NewsService {
     const newsList = await this.newsRepository.searchNewsByKeyword(value);
     return newsList;
   }
-
-  async showNewsByPage(page, limit) {
-    const newsList = await this.newsRepository.findNewsByPage(page, limit);
+  async showNewsByPage(page, limit, order) {
+    const newsList = await this.newsRepository.findNewsByPage(
+      page,
+      limit,
+      order,
+    );
 
     if (newsList.length !== 0) {
       for (const newsItem of newsList) {
