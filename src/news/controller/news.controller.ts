@@ -48,6 +48,11 @@ export class NewsController {
     return this.newsService.saveNewsImg(files[0], imgName);
   }
 
+  @Get('/search/?')
+  searchNews(@Query('value') value: string) {
+    return this.newsService.searchNews(value);
+  }
+
   @Get('/findByFilter/?')
   showNewsByPage(@Query('page') page: number, @Query('limit') limit: number) {
     return this.newsService.showNewsByPage(page, limit);

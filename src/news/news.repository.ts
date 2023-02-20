@@ -29,6 +29,26 @@ export class NewsRepository {
     return await queryRunner.manager.save(News, news);
   }
 
+  async searchNewsByKeyword(keyword) {
+    try {
+      const newsList = await this.newsRepository
+        .createQueryBuilder('news')
+        .select([
+          'news.slug as slug',
+          'news.title as title',
+          'news.subTitle as subTitle',
+        ])
+        .where('news.title like :keyword', { keyword: `%${keyword}%` })
+        .orWhere('news.subTitle like :keyword', { keyword: `%${keyword}` })
+        .orWhere('news.category like :keyword', { keyword: `%${keyword}` })
+        .getRawMany();
+
+      return newsList;
+    } catch (error) {
+      throw new HttpException(error, 400);
+    }
+  }
+
   async findNewsByPage(page, limit) {
     const skip = (page - 1) * limit; // 스킵할 news 수
     try {
