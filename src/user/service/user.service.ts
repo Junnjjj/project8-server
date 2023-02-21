@@ -34,7 +34,16 @@ export class UserService {
     const isUserExist = await this.userRepository.findUserByEmail(loginId);
 
     if (isUserExist) {
-      throw new UnauthorizedException('해당하는 유저는 이미 존재합니다.');
+      throw new UnauthorizedException(
+        '해당하는 이메일의 유저는 이미 존재합니다.',
+      );
+    }
+
+    const isNameExist = await this.userRepository.findUserByNickName(name);
+    if (isNameExist) {
+      throw new UnauthorizedException(
+        '해당하는 이름의 유저는 이미 존재합니다.',
+      );
     }
 
     const hashedPassword = await bcrypt.hash(passwd, 12);
