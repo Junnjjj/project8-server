@@ -41,6 +41,17 @@ export class UserRepository {
     }
   }
 
+  async findUserByNickName(name: string): Promise<User | null> {
+    try {
+      const user = await this.usersRepository.findOne({
+        where: { name: name },
+      });
+      return user;
+    } catch (error) {
+      throw new HttpException('db error', 400);
+    }
+  }
+
   async findUserById(id: number): Promise<User | null> {
     try {
       const user = await this.usersRepository.findOne({

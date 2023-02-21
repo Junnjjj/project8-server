@@ -41,6 +41,8 @@ export class NewsRepository {
         .where('news.title like :keyword', { keyword: `%${keyword}%` })
         .orWhere('news.subTitle like :keyword', { keyword: `%${keyword}` })
         .orWhere('news.category like :keyword', { keyword: `%${keyword}` })
+        .orderBy({ 'news.createDate': 'DESC' })
+        .limit(5)
         .getRawMany();
 
       return newsList;
@@ -73,7 +75,10 @@ export class NewsRepository {
         .orderBy(
           sort === 0
             ? { 'news.createDate': 'DESC' }
-            : { 'COUNT(comment.id) + COUNT(favorite.id)/0.5': 'DESC' },
+            : {
+                'COUNT(comment.id) + COUNT(favorite.id)/0.5 + news.visitors/0.01':
+                  'DESC',
+              },
         )
         .limit(limit)
         .offset(skip)
